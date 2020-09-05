@@ -1,0 +1,45 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "end_col_offset": 20,
+            "end_lineno": 2,
+            "lineno": 2,
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Constant",
+                        "col_offset": 6,
+                        "end_col_offset": 19,
+                        "end_lineno": 2,
+                        "kind": null,
+                        "lineno": 2,
+                        "n": "hello world",
+                        "s": "hello world",
+                        "value": "hello world"
+                    }
+                ],
+                "col_offset": 0,
+                "end_col_offset": 20,
+                "end_lineno": 2,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "end_col_offset": 5,
+                    "end_lineno": 2,
+                    "id": "print",
+                    "lineno": 2
+                },
+                "keywords": [],
+                "lineno": 2
+            }
+        }
+    ],
+    "type_ignores": []
+}

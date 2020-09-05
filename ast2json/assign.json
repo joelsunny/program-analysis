@@ -1,0 +1,91 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "end_col_offset": 7,
+            "end_lineno": 1,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "end_col_offset": 1,
+                    "end_lineno": 1,
+                    "id": "i",
+                    "lineno": 1
+                }
+            ],
+            "type_comment": null,
+            "value": {
+                "_type": "Constant",
+                "col_offset": 4,
+                "end_col_offset": 7,
+                "end_lineno": 1,
+                "kind": null,
+                "lineno": 1,
+                "n": 193,
+                "s": 193,
+                "value": 193
+            }
+        },
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "end_col_offset": 7,
+            "end_lineno": 2,
+            "lineno": 2,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "end_col_offset": 1,
+                    "end_lineno": 2,
+                    "id": "j",
+                    "lineno": 2
+                }
+            ],
+            "type_comment": null,
+            "value": {
+                "_type": "BinOp",
+                "col_offset": 4,
+                "end_col_offset": 7,
+                "end_lineno": 2,
+                "left": {
+                    "_type": "Name",
+                    "col_offset": 4,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "end_col_offset": 5,
+                    "end_lineno": 2,
+                    "id": "i",
+                    "lineno": 2
+                },
+                "lineno": 2,
+                "op": {
+                    "_type": "Mult"
+                },
+                "right": {
+                    "_type": "Constant",
+                    "col_offset": 6,
+                    "end_col_offset": 7,
+                    "end_lineno": 2,
+                    "kind": null,
+                    "lineno": 2,
+                    "n": 2,
+                    "s": 2,
+                    "value": 2
+                }
+            }
+        }
+    ],
+    "type_ignores": []
+}
