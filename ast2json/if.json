@@ -1,0 +1,355 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "end_col_offset": 6,
+            "end_lineno": 1,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "end_col_offset": 1,
+                    "end_lineno": 1,
+                    "id": "a",
+                    "lineno": 1
+                }
+            ],
+            "type_comment": null,
+            "value": {
+                "_type": "Constant",
+                "col_offset": 4,
+                "end_col_offset": 6,
+                "end_lineno": 1,
+                "kind": null,
+                "lineno": 1,
+                "n": 10,
+                "s": 10,
+                "value": 10
+            }
+        },
+        {
+            "_type": "If",
+            "body": [
+                {
+                    "_type": "AugAssign",
+                    "col_offset": 4,
+                    "end_col_offset": 10,
+                    "end_lineno": 4,
+                    "lineno": 4,
+                    "op": {
+                        "_type": "Add"
+                    },
+                    "target": {
+                        "_type": "Name",
+                        "col_offset": 4,
+                        "ctx": {
+                            "_type": "Store"
+                        },
+                        "end_col_offset": 5,
+                        "end_lineno": 4,
+                        "id": "a",
+                        "lineno": 4
+                    },
+                    "value": {
+                        "_type": "Constant",
+                        "col_offset": 9,
+                        "end_col_offset": 10,
+                        "end_lineno": 4,
+                        "kind": null,
+                        "lineno": 4,
+                        "n": 1,
+                        "s": 1,
+                        "value": 1
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "end_col_offset": 10,
+            "end_lineno": 10,
+            "lineno": 3,
+            "orelse": [
+                {
+                    "_type": "If",
+                    "body": [
+                        {
+                            "_type": "AugAssign",
+                            "col_offset": 4,
+                            "end_col_offset": 10,
+                            "end_lineno": 6,
+                            "lineno": 6,
+                            "op": {
+                                "_type": "Sub"
+                            },
+                            "target": {
+                                "_type": "Name",
+                                "col_offset": 4,
+                                "ctx": {
+                                    "_type": "Store"
+                                },
+                                "end_col_offset": 5,
+                                "end_lineno": 6,
+                                "id": "a",
+                                "lineno": 6
+                            },
+                            "value": {
+                                "_type": "Constant",
+                                "col_offset": 9,
+                                "end_col_offset": 10,
+                                "end_lineno": 6,
+                                "kind": null,
+                                "lineno": 6,
+                                "n": 1,
+                                "s": 1,
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "col_offset": 0,
+                    "end_col_offset": 10,
+                    "end_lineno": 10,
+                    "lineno": 5,
+                    "orelse": [
+                        {
+                            "_type": "If",
+                            "body": [
+                                {
+                                    "_type": "AugAssign",
+                                    "col_offset": 4,
+                                    "end_col_offset": 10,
+                                    "end_lineno": 8,
+                                    "lineno": 8,
+                                    "op": {
+                                        "_type": "Sub"
+                                    },
+                                    "target": {
+                                        "_type": "Name",
+                                        "col_offset": 4,
+                                        "ctx": {
+                                            "_type": "Store"
+                                        },
+                                        "end_col_offset": 5,
+                                        "end_lineno": 8,
+                                        "id": "a",
+                                        "lineno": 8
+                                    },
+                                    "value": {
+                                        "_type": "Constant",
+                                        "col_offset": 9,
+                                        "end_col_offset": 10,
+                                        "end_lineno": 8,
+                                        "kind": null,
+                                        "lineno": 8,
+                                        "n": 2,
+                                        "s": 2,
+                                        "value": 2
+                                    }
+                                }
+                            ],
+                            "col_offset": 0,
+                            "end_col_offset": 10,
+                            "end_lineno": 10,
+                            "lineno": 7,
+                            "orelse": [
+                                {
+                                    "_type": "AugAssign",
+                                    "col_offset": 4,
+                                    "end_col_offset": 10,
+                                    "end_lineno": 10,
+                                    "lineno": 10,
+                                    "op": {
+                                        "_type": "Mult"
+                                    },
+                                    "target": {
+                                        "_type": "Name",
+                                        "col_offset": 4,
+                                        "ctx": {
+                                            "_type": "Store"
+                                        },
+                                        "end_col_offset": 5,
+                                        "end_lineno": 10,
+                                        "id": "a",
+                                        "lineno": 10
+                                    },
+                                    "value": {
+                                        "_type": "Constant",
+                                        "col_offset": 9,
+                                        "end_col_offset": 10,
+                                        "end_lineno": 10,
+                                        "kind": null,
+                                        "lineno": 10,
+                                        "n": 2,
+                                        "s": 2,
+                                        "value": 2
+                                    }
+                                }
+                            ],
+                            "test": {
+                                "_type": "Compare",
+                                "col_offset": 5,
+                                "comparators": [
+                                    {
+                                        "_type": "Constant",
+                                        "col_offset": 9,
+                                        "end_col_offset": 10,
+                                        "end_lineno": 7,
+                                        "kind": null,
+                                        "lineno": 7,
+                                        "n": 4,
+                                        "s": 4,
+                                        "value": 4
+                                    }
+                                ],
+                                "end_col_offset": 10,
+                                "end_lineno": 7,
+                                "left": {
+                                    "_type": "Name",
+                                    "col_offset": 5,
+                                    "ctx": {
+                                        "_type": "Load"
+                                    },
+                                    "end_col_offset": 6,
+                                    "end_lineno": 7,
+                                    "id": "a",
+                                    "lineno": 7
+                                },
+                                "lineno": 7,
+                                "ops": [
+                                    {
+                                        "_type": "Lt"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "test": {
+                        "_type": "Compare",
+                        "col_offset": 5,
+                        "comparators": [
+                            {
+                                "_type": "Constant",
+                                "col_offset": 9,
+                                "end_col_offset": 11,
+                                "end_lineno": 5,
+                                "kind": null,
+                                "lineno": 5,
+                                "n": 12,
+                                "s": 12,
+                                "value": 12
+                            }
+                        ],
+                        "end_col_offset": 11,
+                        "end_lineno": 5,
+                        "left": {
+                            "_type": "Name",
+                            "col_offset": 5,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "end_col_offset": 6,
+                            "end_lineno": 5,
+                            "id": "a",
+                            "lineno": 5
+                        },
+                        "lineno": 5,
+                        "ops": [
+                            {
+                                "_type": "Lt"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "test": {
+                "_type": "BoolOp",
+                "col_offset": 3,
+                "end_col_offset": 24,
+                "end_lineno": 3,
+                "lineno": 3,
+                "op": {
+                    "_type": "And"
+                },
+                "values": [
+                    {
+                        "_type": "Compare",
+                        "col_offset": 4,
+                        "comparators": [
+                            {
+                                "_type": "Constant",
+                                "col_offset": 8,
+                                "end_col_offset": 10,
+                                "end_lineno": 3,
+                                "kind": null,
+                                "lineno": 3,
+                                "n": 20,
+                                "s": 20,
+                                "value": 20
+                            }
+                        ],
+                        "end_col_offset": 10,
+                        "end_lineno": 3,
+                        "left": {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "end_col_offset": 5,
+                            "end_lineno": 3,
+                            "id": "a",
+                            "lineno": 3
+                        },
+                        "lineno": 3,
+                        "ops": [
+                            {
+                                "_type": "Gt"
+                            }
+                        ]
+                    },
+                    {
+                        "_type": "Compare",
+                        "col_offset": 17,
+                        "comparators": [
+                            {
+                                "_type": "Constant",
+                                "col_offset": 21,
+                                "end_col_offset": 23,
+                                "end_lineno": 3,
+                                "kind": null,
+                                "lineno": 3,
+                                "n": 20,
+                                "s": 20,
+                                "value": 20
+                            }
+                        ],
+                        "end_col_offset": 23,
+                        "end_lineno": 3,
+                        "left": {
+                            "_type": "Name",
+                            "col_offset": 17,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "end_col_offset": 18,
+                            "end_lineno": 3,
+                            "id": "a",
+                            "lineno": 3
+                        },
+                        "lineno": 3,
+                        "ops": [
+                            {
+                                "_type": "Lt"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "type_ignores": []
+}

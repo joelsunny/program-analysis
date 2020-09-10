@@ -1,2 +1,2 @@
-for i in range(1,10):
-    print(i)
+for i,v in enumerate([1,2,5,6]):
+    print(i,v)
