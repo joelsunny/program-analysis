@@ -4,9 +4,7 @@ from ast import parse
 from ast2json import ast2json
 from os.path import basename
 
-def dumpjson(ast, infile):
-    fname = basename(file).split(".")[0]
-    outfile = fname + ".json"
+def dumpjson(ast, outfile):
     json.dump(ast, open(outfile, 'w'), indent=4)
 
 def generate_ast(file):
@@ -19,8 +17,9 @@ def generate_ast(file):
     return ast
 
 if __name__ == '__main__':
-    file = sys.argv[1]
+    source = sys.argv[1]
+    outfile = sys.argv[2]
 
     # generate ast json and write to file
-    ast = generate_ast(file)
-    dumpjson(ast, file)
+    ast = generate_ast(source)
+    dumpjson(ast, outfile)
