@@ -243,8 +243,35 @@ def ast_to_str(ast, op = False, sub=False):
     else:
         return stmt
 
+def find_loop_conditions(ast):
+    stmt_list = []
+    for key in ast:
+        if key == "_type":
+            if ast["_type"] == "For":
+                stmt_list.append(ast_to_str(ast["target"]) + " in " + ast_to_str(ast["iter"]))
+            elif ast["_type"] == "While":
+                stmt_list.append(ast_to_str(ast["test"]))
+        elif isinstance(ast[key], dict):
+            stmt_list += find_loop_conditions(ast[key])
+        elif isinstance(ast[key], list):
+            for node in ast[key]:
+                stmt_list += find_loop_conditions(node)
+
+    return stmt_list
+
 def find_branch_conditions(ast):
-    return []
+    stmt_list = []
+    for key in ast:
+        if key == "_type":
+            if ast["_type"] == "If":
+                stmt_list.append(ast_to_str(ast["test"]))
+        elif isinstance(ast[key], dict):
+            stmt_list += find_branch_conditions(ast[key])
+        elif isinstance(ast[key], list):
+            for node in ast[key]:
+                stmt_list += find_branch_conditions(node)
+
+    return stmt_list
 
 def find_assignment_stmts(ast):
     """
@@ -274,20 +301,23 @@ def find_assignment_stmts(ast):
 
     return stmt_list
 
-def log_results(assignments, branches, loops, opt, tofile=False):
+def log_results(assignments, branches, loops, opt, outfile=None):
+    if outfile != None:
+        sys.stdout = outfile
+
     def _print_list(lst):
         for element in lst:
             print(element)
         print("\n")
 
     if opt == "assign" or opt == "all":
-        print("Assignment Statements:")
+        print("Assignment Statements:\n")
         _print_list(assignments)
 
     if opt == "branch" or opt == "all":
-        print("Branch Conditions:")
+        print("Branch Conditions:\n")
         _print_list(branches)
-        print("Loop Conditions:")
+        print("Loop Conditions:\n")
         _print_list(loops)
     
 
@@ -299,7 +329,6 @@ if __name__ == '__main__':
     ast_file = sys.argv[1]
     opt = sys.argv[2]
 
-
     ast = json.loads(open(ast_file).read())
 
     assignments = []
@@ -310,11 +339,17 @@ if __name__ == '__main__':
         assignments = find_assignment_stmts(ast)
     elif opt == "branch":
         branches = find_branch_conditions(ast)
+        loops = find_loop_conditions(ast)
     elif opt == "all":
         assignments = find_assignment_stmts(ast)
         branches = find_branch_conditions(ast)
+        loops = find_loop_conditions(ast)
     else:
         print(f"unknown option {opt}")
         usage()
-    
-    log_results(assignments, branches, loops, opt, tofile=True)
+
+    # output to txt file
+    outfile = ast_file[:-4] + "txt"
+    outfile = open(outfile, 'w')
+    log_results(assignments, branches, loops, opt, outfile=None)
+    outfile.close()

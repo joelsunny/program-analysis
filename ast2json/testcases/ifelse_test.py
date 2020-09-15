@@ -7,4 +7,8 @@ elif a < 12:
 elif a < 4:
     a -= 2
 else:
+    if a == 1:
+        print("done")
+    elif a < 0:
+        print("negative")
     a *= 2
