@@ -1,0 +1,22 @@
+Assignment Statements:
+
+a = 10
+a += 1
+a -= 1
+a -= 2
+a *= 2
+
+
+Branch Conditions:
+
+(a > 20) and (a < 20)
+a < 12
+a < 4
+a == 1
+a < 0
+
+
+Loop Conditions:
+
+
+

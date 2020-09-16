@@ -8,7 +8,7 @@ elif a < 4:
     a -= 2
 else:
     if a == 1:
-        print("done")
+        print("a==1")
     elif a < 0:
-        print("negative")
+        print("a<0")
     a *= 2

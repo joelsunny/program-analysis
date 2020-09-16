@@ -1,0 +1,20 @@
+Assignment Statements:
+
+num = 5
+factorial = 1
+factorial = factorial*i
+num = num-1
+
+
+Branch Conditions:
+
+num < 0
+num == 0
+
+
+Loop Conditions:
+
+i in range(1, num+1)
+num > 0
+
+

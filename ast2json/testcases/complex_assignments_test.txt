@@ -1,0 +1,29 @@
+Assignment Statements:
+
+coro = test()
+res = await coro
+primes: List[int] = [3, 5]
+a := plusone(1)
+x = lambda a, b, c : (a+b)+c
+v1 = "my"
+v2 = "X"
+j = f"{v1} name is {v2}"
+star = *range(4)
+l = [ i*2 for i in range(10) if i > 3]
+j = [ "Even" if (i%2) == 0 else "Odd" for i in range(8) ]
+k = [ i for i in range(8) if (i%2) == 0 if (i%3) == 0]
+myDict = { x: x**2 for x in [1, 2, 3, 4, 5] }
+s = { (m, n) for n in range(2)  for m in range(3, 5) }
+a = ",".join(["hello", "world"])
+generatorExp = (x**2 for x in my_list )
+
+
+Branch Conditions:
+
+(a := plusone(1)) > 2
+
+
+Loop Conditions:
+
+
+

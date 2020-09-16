@@ -1,0 +1,20 @@
+Assignment Statements:
+
+i = 1
+j = 0
+i *= 2
+j += 1
+j += 1
+
+
+Branch Conditions:
+
+
+
+Loop Conditions:
+
+((i*2) <= j+11) and (i > j)
+i > 1
+j < 10
+
+

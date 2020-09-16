@@ -4,21 +4,32 @@ Usage:
         python 3.8
         asttojson library
 
-    sh run.sh <python_file> [option]
+    Other pre-reqs:
+    ---------------
+    1. Give write and execute permissions to the directory containing the run.sh file
+    2. Give execute permission for the contents of source directory
+    3. We assume python can be invoked using 'python3' keyword
+
+    ./run.sh <python_file> [option]
         option - possible values are "assign", "branch" or empty.
     Examples:
-        1. To print all assignment statements
-            sh run.sh testcases/assignments_test.py assign
-        2. To print all branch,loop conditions
-            sh run.sh testcases/ifelse_test.py branch
-        3. To print assignment statements as well as branch, loop conditions 
+        1. To print assignment statements as well as branch, loop conditions 
             sh run.sh testcases/while_test.py
+        2. To print just the assignment statements
+            sh run.sh testcases/assignments_test.py assign
+        3. To print just the branch and loop conditions
+            sh run.sh testcases/ifelse_test.py branch
+
+    Output:
+    -------
+    The generated AST will be dumped to "temp" folder in the same directory of the run.sh file.
+    The output of the AST analysis will be displayed in the stdout.
 
 Code Structure
 ================
 The 'source' directory contains two python scripts.
     1) astgen.py   - generates the json dump of the program AST
-    2) asttostr.py - analyzez the ast to output the required statements
+    2) asttostr.py - analyses the ast to output the required statements
 
 The 'testcases' directory contains the python scripts used for testing and their corresponding outputs in .txt format.
 For eg. the output corresponding to assignments_test.py is stored in assignments_test.txt

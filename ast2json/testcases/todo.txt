@@ -1,9 +1,0 @@
- Write a tool in your chosen language which will take this AST as input and print
-    1) all the assignment statements
-    2) all branch conditions and loop conditions in the original python program.
-
-A set of test cases (at least 5) with expected output.
-
-A Readme file (txt/pdf/doc/docx) which will give a short report (half to one page maximum) on how you accomplished this task and how to build and run your source on any input python file.
-
-A shell script named "run" which will take a python file as input, invoke ast2json to dump the corresponding AST and finally invoke your tool to print the required output (assignments, branch and loop conditions).

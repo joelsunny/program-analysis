@@ -1,0 +1,15 @@
+Assignment Statements:
+
+
+
+Branch Conditions:
+
+
+
+Loop Conditions:
+
+i, v in enumerate([1, 2, 5, 6])
+j in range(i)
+doc in get_result()
+
+

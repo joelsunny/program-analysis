@@ -1,13 +1,3 @@
-"""
-Usage: python 1-assignment.py <pyhton source file> <option>
-    options:
-        assign - print assignment stmts
-        branch - print branch conditions
-
-Assignment objectives
-1. print all assignment statements
-2. branch and loop conditions
-"""
 import sys
 import json
 import astgen
@@ -24,6 +14,7 @@ def usage():
     print(help)
     exit()
 
+# operators in python
 # operator = Add | Sub | Mult | MatMult | Div | Mod | Pow | LShift | RShift | BitOr | BitXor | BitAnd | FloorDiv
 # unaryop = Invert | Not | UAdd | USub
 # cmpop = Eq | NotEq | Lt | LtE | Gt | GtE | Is | IsNot | In | NotIn
@@ -42,9 +33,9 @@ op_dict = {
     "BitAnd": "&",
     "FloorDiv": "//",
     "Invert": "~",
-    "Not": "not",
+    "Not": "not ",
     "UAdd": "+",
-    "Usub": "-",
+    "USub": "-",
     "And": "and",
     "Or": "or",
     "Eq": "==",
@@ -60,8 +51,9 @@ op_dict = {
 }
 
 TERMINALS = {"Constant", "Name", "arg"}
+PRECEDENCE = {"BinOp", "BoolOp", "Compare"}
 
-def ast_to_str(ast, op = False, sub=False):
+def ast_to_str(ast, op=False, sub=False, join=False):
     """
     two types of nodes:
         1. terminal - Constant, Name, arg
@@ -77,6 +69,9 @@ def ast_to_str(ast, op = False, sub=False):
     elif expr_type == "Constant":
         # Constant(constant value, string? kind)
         stmt = str(ast["value"]) if not isinstance(ast["value"], str) else f'"{ast["value"]}"'
+        if join and isinstance(ast["value"], str):
+            # if join is true and the constant is a string, then part of JoinedExpr. Don't return the quotes
+            stmt = ast["value"]
     elif expr_type == "Name":
         # Name(identifier id, expr_context ctx)
         stmt = ast["id"]
@@ -97,6 +92,15 @@ def ast_to_str(ast, op = False, sub=False):
             stmt += f" = {value}"
     elif expr_type == "BinOp":
         # BinOp(expr left, operator op, expr right)
+
+        # disable parenthisation for string concatenation, for clearer output
+        if ast["left"]["_type"] == "Constant":
+            if isinstance(ast["left"]["value"], str):
+                sub=False
+        elif ast["right"]["_type"] == "Constant":
+            if isinstance(ast["right"]["value"], str):
+                sub=False
+
         stmt = ast_to_str(ast["left"], sub=True) + ast_to_str(ast["op"], op=True) + ast_to_str(ast["right"], sub=True)
     elif expr_type == "BoolOp":
         # BoolOp(boolop op, expr* values)
@@ -169,9 +173,9 @@ def ast_to_str(ast, op = False, sub=False):
     elif expr_type == "JoinedStr":
         # JoinedStr(expr* values)
         # TODO: handle string space weirdness
-        values = [ast_to_str(val) for val in ast["values"]]
+        values = [ast_to_str(val, join=True) for val in ast["values"]]
         values = "".join(values)
-        stmt = values
+        stmt = "f" + "\"" + values + "\""
     elif expr_type == "Attribute":
         # Attribute(expr value, identifier attr, expr_context ctx)
         stmt = ast_to_str(ast["value"]) + "." + ast["attr"]
@@ -215,7 +219,7 @@ def ast_to_str(ast, op = False, sub=False):
         # cmpop = Eq | NotEq | Lt | LtE | Gt | GtE | Is | IsNot | In | NotIn
         comparators = [ast_to_str(val) for val in ast["comparators"]]
         ops = [ast_to_str(val, op=True) for val in ast["ops"]]
-        left = ast_to_str(ast["left"])
+        left = ast_to_str(ast["left"], sub=True)
         right = [ops[i]+" " + comparators[i] for i in range(len(ops))]
         right = " ".join(right)
         stmt = left + " " + right
@@ -238,19 +242,32 @@ def ast_to_str(ast, op = False, sub=False):
     else:
         return f"unimplemented: {expr_type}"
     
-    if sub and expr_type not in TERMINALS:
+    if sub and (expr_type not in TERMINALS):
         return "("+stmt+")"
     else:
         return stmt
 
 def find_loop_conditions(ast):
+    """
+    function to find loop conditions.
+
+    loop conditions:
+        For(expr target, expr iter, stmt* body, stmt* orelse, string? type_comment)
+        AsyncFor(expr target, expr iter, stmt* body, stmt* orelse, string? type_comment)
+        While(expr test, stmt* body, stmt* orelse)
+    """
     stmt_list = []
     for key in ast:
         if key == "_type":
             if ast["_type"] == "For":
+                # For(expr target, expr iter, stmt* body, stmt* orelse, string? type_comment)
                 stmt_list.append(ast_to_str(ast["target"]) + " in " + ast_to_str(ast["iter"]))
             elif ast["_type"] == "While":
+                # While(expr test, stmt* body, stmt* orelse)
                 stmt_list.append(ast_to_str(ast["test"]))
+            elif ast["_type"] == "AsyncFor":
+                # AsyncFor(expr target, expr iter, stmt* body, stmt* orelse, string? type_comment)
+                stmt_list.append(ast_to_str(ast["target"]) + " in " + ast_to_str(ast["iter"]))
         elif isinstance(ast[key], dict):
             stmt_list += find_loop_conditions(ast[key])
         elif isinstance(ast[key], list):
@@ -260,6 +277,12 @@ def find_loop_conditions(ast):
     return stmt_list
 
 def find_branch_conditions(ast):
+    """
+    function to find branch conditions.
+
+    branch conditions:
+        If(expr test, stmt* body, stmt* orelse)
+    """
     stmt_list = []
     for key in ast:
         if key == "_type":
@@ -282,6 +305,7 @@ def find_assignment_stmts(ast):
         AugAssign(expr target, operator op, expr value)
             -- 'simple' indicates that we annotate simple name without parens
         AnnAssign(expr target, expr annotation, expr? value, int simple)
+        NamedExpr(expr target, expr value)
     """
     stmt_list = []
     for key in ast:
@@ -302,6 +326,10 @@ def find_assignment_stmts(ast):
     return stmt_list
 
 def log_results(assignments, branches, loops, opt, outfile=None):
+    """
+    function to output the results of the analysis. If outfile parameter is
+    supplied, the output is written to the file. Otherwise printed to stdout
+    """
     if outfile != None:
         sys.stdout = outfile
 
@@ -326,11 +354,14 @@ if __name__ == '__main__':
     if len(sys.argv) < 3:
         usage()
 
+    # read inputs to the script
     ast_file = sys.argv[1]
     opt = sys.argv[2]
 
+    # load AST json
     ast = json.loads(open(ast_file).read())
 
+    # intitialize the result arrays
     assignments = []
     branches = []
     loops = []
@@ -348,8 +379,5 @@ if __name__ == '__main__':
         print(f"unknown option {opt}")
         usage()
 
-    # output to txt file
-    outfile = ast_file[:-4] + "txt"
-    outfile = open(outfile, 'w')
+    print("INFO: Output:\n")
     log_results(assignments, branches, loops, opt, outfile=None)
-    outfile.close()

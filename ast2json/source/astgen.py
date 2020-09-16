@@ -13,7 +13,11 @@ def generate_ast(file):
     except:
         print(f"failed to read {file}")
     
-    ast = ast2json(parse(program))
+    try:
+        ast = ast2json(parse(program))
+    except SyntaxError:
+        print("ERROR: syntax error detected")
+        exit(1)
     return ast
 
 if __name__ == '__main__':
