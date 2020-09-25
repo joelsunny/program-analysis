@@ -23,11 +23,6 @@ init() {
 
     # get file base name, which will be used to store the ast json
     prog=$1
-    opt=$2
-    if [ -z "$opt" ]; then
-        opt="all"
-    fi
-
     fname=$(basename $prog)
     fname=$(echo $fname | cut -d "." -f1)
     tempdir="$DIR/temp"
@@ -52,7 +47,7 @@ generate_ast() {
     fi
     echo "INFO: generating ast"
     # echo "INFO: python $DIR/source/astgen.py $prog $ast"
-    python3 $DIR/source/astgen.py $prog $ast
+    python $DIR/source/astgen.py $prog $ast
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo "ERROR: received exit code $exit_code"
@@ -61,8 +56,8 @@ generate_ast() {
 }
 
 generate_3ac() {
-    echo "INFO: invoking tool to generate three address code"
-    python3 $DIR/source/astto3ac.py $ast $opt 
+    echo "INFO: invoking tool to generate CFG"
+    python $DIR/source/asttocfg.py $ast 
 }
 
 # main

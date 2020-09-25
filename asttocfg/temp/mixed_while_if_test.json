@@ -1,0 +1,113 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "While",
+            "body": [
+                {
+                    "_type": "If",
+                    "body": [
+                        {
+                            "_type": "Assign",
+                            "col_offset": 8,
+                            "end_col_offset": 13,
+                            "end_lineno": 3,
+                            "lineno": 3,
+                            "targets": [
+                                {
+                                    "_type": "Name",
+                                    "col_offset": 8,
+                                    "ctx": {
+                                        "_type": "Store"
+                                    },
+                                    "end_col_offset": 9,
+                                    "end_lineno": 3,
+                                    "id": "i",
+                                    "lineno": 3
+                                }
+                            ],
+                            "type_comment": null,
+                            "value": {
+                                "_type": "Constant",
+                                "col_offset": 12,
+                                "end_col_offset": 13,
+                                "end_lineno": 3,
+                                "kind": null,
+                                "lineno": 3,
+                                "n": 0,
+                                "s": 0,
+                                "value": 0
+                            }
+                        }
+                    ],
+                    "col_offset": 4,
+                    "end_col_offset": 13,
+                    "end_lineno": 5,
+                    "lineno": 2,
+                    "orelse": [
+                        {
+                            "_type": "Assign",
+                            "col_offset": 8,
+                            "end_col_offset": 13,
+                            "end_lineno": 5,
+                            "lineno": 5,
+                            "targets": [
+                                {
+                                    "_type": "Name",
+                                    "col_offset": 8,
+                                    "ctx": {
+                                        "_type": "Store"
+                                    },
+                                    "end_col_offset": 9,
+                                    "end_lineno": 5,
+                                    "id": "i",
+                                    "lineno": 5
+                                }
+                            ],
+                            "type_comment": null,
+                            "value": {
+                                "_type": "Constant",
+                                "col_offset": 12,
+                                "end_col_offset": 13,
+                                "end_lineno": 5,
+                                "kind": null,
+                                "lineno": 5,
+                                "n": 1,
+                                "s": 1,
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "test": {
+                        "_type": "Name",
+                        "col_offset": 7,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "end_col_offset": 8,
+                        "end_lineno": 2,
+                        "id": "i",
+                        "lineno": 2
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "end_col_offset": 13,
+            "end_lineno": 5,
+            "lineno": 1,
+            "orelse": [],
+            "test": {
+                "_type": "Constant",
+                "col_offset": 6,
+                "end_col_offset": 10,
+                "end_lineno": 1,
+                "kind": null,
+                "lineno": 1,
+                "n": true,
+                "s": true,
+                "value": true
+            }
+        }
+    ],
+    "type_ignores": []
+}

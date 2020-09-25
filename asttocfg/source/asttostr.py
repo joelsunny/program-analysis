@@ -112,6 +112,9 @@ def ast_to_str(ast, op=False, sub=False, join=False):
         op = ast_to_str(ast["op"], op=True)
         operand = ast_to_str(ast["operand"])
         stmt = f"{op}{operand}"
+    elif expr_type == "Expr":
+        # Expr(expr value)
+        stmt = ast_to_str(ast["value"])
     elif expr_type == "NamedExpr":
         # NamedExpr(expr target, expr value)
         stmt = ast_to_str(ast["target"]) + " := " + ast_to_str(ast["value"])
