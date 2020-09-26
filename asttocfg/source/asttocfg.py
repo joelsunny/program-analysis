@@ -36,6 +36,7 @@ class BasicBlock:
         self.neighbours = []
         self.is_special = is_special
         self.is_dummy = False
+        self.has_branched = False
 
     def add_instruction(self, instr):
         """
@@ -82,7 +83,6 @@ class CFG:
         t_block = BasicBlock()
         self.add_edge(self.root, t_block)
         self.root = t_block
-        self.has_branched = False
 
     def add_node(self, block):
         """
@@ -172,7 +172,9 @@ class CFG:
 
     def construct_from_ast(self, ast, entry=None):
         """
-
+        Do a pre-order traversal of the AST to generate the control flow graph.
+        The algorithm adds the source instructions to the current basic block
+        until a branch leader is encountered.
         """
         if entry == None:
             curr_block = self.root
@@ -218,6 +220,10 @@ class CFG:
 
                 elif stmt_type == "While":
                     # While(expr test, stmt* body, stmt* orelse)
+                    if len(curr_block.source) != 0:
+                        t_block = BasicBlock()
+                        self.add_edge(curr_block, t_block)
+                        curr_block = t_block
                     while_block = curr_block
                     t = asttostr.ast_to_str(stmt["test"])
                     instr = f"while[{t}]"

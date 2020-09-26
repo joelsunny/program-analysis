@@ -9,4 +9,4 @@ if c1:
 elif c2:
     i = 20
 
-i = "done"
+print("done")

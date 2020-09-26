@@ -50,3 +50,22 @@ For eg. the output corresponding to if_test.py is stored in if_test.svg
 
 Explanation of Our approach
 ===========================
+
+Important Data Structures:
+--------------------------
+    1. class CFG        : Class 'CFG' is used to store the Control Flow graph and associated methods
+    2. class BasicBlock : Each node of the CFG is a 'BasicBlock' object.
+
+CFG Generation Algorithm:
+-------------------------
+The two steps involved in the generation of the output CFG are:
+    1) pre-order traversal of the AST to generate the CFG
+        The algorithm adds the source instructions to the current basic block until a branch leader('If' or 'While') is encountered.
+        Behaviour on encountering a branch leader is dependent on the particular type of statement.
+         - An 'If' statement is added to the current block itself if the previous statement is not a branch leader, otherwise
+         'If' occupies its own block.
+         - A 'While' condition always occupies its own block.
+        The logic for this is in the function 'contruct_from_ast' of class 'CFG'.
+
+    2) Iterate over CFG nodes and edges to generate the dot file
+        This is done in CFG.generate_dot function.
