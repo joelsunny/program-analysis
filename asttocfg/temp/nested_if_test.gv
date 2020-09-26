@@ -1,47 +1,57 @@
 // CFG
 digraph {
-	0 [label="b0:
+	node [color="#97fcb2" shape=diamond style=filled]
+	0 [label=ENTRY]
+	node [color="#f2e996" shape=ellipse style=filled]
+	1 [label="block 1:
 c1 = True
 c2 = False
-c3 = True
+c3 = True"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	2 [label="block 2:
+branch[c1]"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	3 [label="block 3:
+i = 5"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	4 [label="block 4:
+branch[c3]"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	5 [label="block 5:
+i *= 2"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	6 [label="block 6:
 "]
-	1 [label="b1:
-branch[c1]
+	node [color="#f2e996" shape=ellipse style=filled]
+	7 [label="block 7:
+branch[c2]"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	8 [label="block 8:
+i = 20"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	9 [label="block 9:
 "]
-	2 [label="b2:
-i = 5
-"]
-	3 [label="b3:
-branch[c3]
-"]
-	4 [label="b4:
-i *= 2
-"]
-	5 [label="b5:
-
-"]
-	6 [label="b6:
-branch[c2]
-"]
-	7 [label="b7:
-i = 20
-"]
-	8 [label="b8:
-
-"]
-	9 [label="b9:
-i = \"done\"
-"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	10 [label="block 10:
+i = \"done\""]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#97fcb2" shape=diamond style=filled]
+	11 [label=EXIT]
+	node [color="#f2e996" shape=ellipse style=filled]
 	0 -> 1
 	1 -> 2
-	1 -> 6
 	2 -> 3
+	2 -> 7
 	3 -> 4
-	3 -> 5
 	4 -> 5
-	5 -> 9
-	6 -> 7
-	6 -> 8
+	4 -> 6
+	5 -> 6
+	6 -> 10
 	7 -> 8
+	7 -> 9
 	8 -> 9
+	9 -> 10
+	10 -> 11
 }

@@ -1,5 +1,8 @@
 while True:
-    if i:
-        i = 0
-    else:
-        i = 1
+    i = 10
+    while i:
+        t = i-5
+        if t:
+            i -= 2
+        else: 
+            i -= 1
