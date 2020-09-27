@@ -3,6 +3,7 @@ import sys
 import json
 import asttostr
 from collections import deque
+import graphviz
 from graphviz import Digraph
 
 def usage():
@@ -57,7 +58,6 @@ class BasicBlock:
         """
         def _find_index(neighbours):
             for i, node in enumerate(neighbours):
-                print(node)
                 if node.id == block:
                     return i
         idx = _find_index(self.neighbours)
@@ -102,8 +102,8 @@ class CFG:
         for p in block.predecessors:
             self.remove_edge(p, block)
             p.remove_neighbour(block.id)
-        # global BLOCK_COUNT
-        # BLOCK_COUNT -= 1
+        global BLOCK_COUNT
+        BLOCK_COUNT -= 1
 
     def add_edge(self, b1, b2):
         """
@@ -122,7 +122,6 @@ class CFG:
                 if node == b2.id:
                     return i
         idx = _find_index(self.adjacency_list[b1.id])
-        print(f"removing {idx}")
         if idx == 0:
             self.adjacency_list[b1.id] = self.adjacency_list[b1.id][1:]
         else:
@@ -146,8 +145,11 @@ class CFG:
             dot.attr('node', shape='ellipse', style='filled', color='#f2e996')
         
         for block in self.adjacency_list:
+            visited_neighbours = set()
             for neighbour in self.adjacency_list[block]:
-                dot.edge(str(block), str(neighbour))
+                if neighbour not in visited_neighbours:
+                    dot.edge(str(block), str(neighbour))
+                visited_neighbours.add(neighbour)
     
         return dot
 
@@ -184,7 +186,7 @@ class CFG:
         for stmt in ast:
             stmt_type = stmt["_type"]
 
-            # print(f"stmt type : {stmt_type}")
+            # if stmt is not a block leader, add it to the current block
             if stmt_type not in BLOCK_LEADERS:
                 curr_block.add_instruction(asttostr.ast_to_str(stmt))
             else:
@@ -200,10 +202,12 @@ class CFG:
                     curr_block.has_branched = True
                     if_block = curr_block
 
+                    # if body processing
                     body = BasicBlock()
                     self.add_edge(curr_block, body)
                     body = self.construct_from_ast(stmt["body"], body)
                     
+                    # orelse node processing
                     if len(stmt["orelse"]) != 0:
                         orelse = BasicBlock()
                         self.add_edge(curr_block, orelse)
@@ -230,9 +234,12 @@ class CFG:
                     curr_block.add_instruction(instr)
                     curr_block.has_branched = True
 
+                    # while body processing
                     body = BasicBlock()
                     self.add_edge(curr_block, body)
                     body = self.construct_from_ast(stmt["body"], body)
+                    # add back edge from body of while to the branch condition
+                    self.add_edge(body, while_block)
                     # check if the returned block is a dummy node
                     # self.add_edge(body, curr_block)
                     if len(body.source) == 0:
@@ -243,7 +250,8 @@ class CFG:
                             self.remove_node(body)
                         else: 
                             self.add_edge(body, curr_block)
-                        
+                    
+                    # orelse node processing
                     if len(stmt["orelse"]) != 0:
                         orelse = BasicBlock()
                         self.add_edge(curr_block, orelse)
@@ -277,7 +285,13 @@ def render_graph(cfg, outfile):
     function to render the control flow graph in graphviz.
     """
     dot = cfg.generate_dot()
-    dot.render(f'temp/{outfile}.gv', view=True)
+    try:
+        dot.render(f'temp/{outfile}.gv', view=True)
+    except graphviz.ExecutableNotFound:
+        print("ERROR: graphviz.ExecutableNotFound. Install graphviz tool.")
+        exit(1)
+    except RuntimeError:
+        print("WARN: image viewer opening is requested but not supported. Output image file is placed under temp folder")
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:

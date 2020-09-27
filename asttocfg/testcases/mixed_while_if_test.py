@@ -6,3 +6,5 @@ while True:
             i -= 2
         else: 
             i -= 1
+
+print("done")

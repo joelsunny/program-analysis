@@ -47,7 +47,7 @@ generate_ast() {
     fi
     echo "INFO: generating ast"
     # echo "INFO: python $DIR/source/astgen.py $prog $ast"
-    python $DIR/source/astgen.py $prog $ast
+    python3 $DIR/source/astgen.py $prog $ast
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo "ERROR: received exit code $exit_code"
@@ -57,7 +57,7 @@ generate_ast() {
 
 generate_3ac() {
     echo "INFO: invoking tool to generate CFG"
-    python $DIR/source/asttocfg.py $ast 
+    python3 $DIR/source/asttocfg.py $ast 
 }
 
 # main

@@ -8,10 +8,3 @@ if t:
 else:
     x = 3 * a
     y = 3 * b
-
-# done = True
-# t = 2
-# while t:
-#     t -= 1
-
-# print("done")
