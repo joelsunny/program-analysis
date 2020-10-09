@@ -1,0 +1,120 @@
+// CFG
+digraph {
+	node [color="#97fcb2" shape=diamond style=filled]
+	0 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	1 [label="block 1:
+
+IN = set()
+num = 900: set()
+upper = 1000: set()
+p = num <= upper: {'upper', 'num'}
+GEN: set(),  KILL: {'upper', 'num', 'p'} 
+OUT = {'upper', 'num', 'p'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	2 [label="block 2:
+
+IN = {'upper', 'num', 'p'}
+while[p]: {'p'}
+GEN: {'p'},  KILL: set() 
+OUT = {'upper', 'num'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	3 [label="block 3:
+
+IN = {'upper', 'num'}
+q = num > 1: {'num'}
+branch[q]: {'q'}
+GEN: {'num'},  KILL: {'q'} 
+OUT = {'upper', 'num'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	4 [label="block 4:
+
+IN = {'upper', 'num'}
+d = 2: set()
+r = d < num: {'d', 'num'}
+GEN: {'num'},  KILL: {'d', 'r'} 
+OUT = {'d', 'upper', 'num', 'r'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	5 [label="block 5:
+
+IN = {'d', 'upper', 'num', 'r'}
+while[r]: {'r'}
+GEN: {'r'},  KILL: set() 
+OUT = {'d', 'upper', 'num'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	6 [label="block 6:
+
+IN = {'d', 'num'}
+s = (num%d) == 0: {'d', 'num'}
+branch[s]: {'s'}
+GEN: {'d', 'num'},  KILL: {'s'} 
+OUT = {'d', 'num'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	7 [label="block 7:
+
+IN = {'num'}
+print(num): {'num'}
+unimplemented: Break: set()
+GEN: {'num'},  KILL: set() 
+OUT = set()"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	8 [label="block 8:
+
+IN = {'d', 'num'}
+d = d+1: {'d'}
+r = d < num: {'d', 'num'}
+GEN: {'d', 'num'},  KILL: {'d', 'r'} 
+OUT = set()"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	9 [label="block 9:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	10 [label="block 10:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	11 [label="block 11:
+
+IN = {'upper', 'num'}
+num = num+1: {'num'}
+p = num <= upper: {'upper', 'num'}
+GEN: {'upper', 'num'},  KILL: {'num', 'p'} 
+OUT = set()"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#97fcb2" shape=diamond style=filled]
+	12 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	0 -> 1
+	1 -> 2
+	2 -> 3
+	2 -> 12
+	3 -> 4
+	3 -> 11
+	4 -> 5
+	5 -> 6
+	5 -> 10
+	6 -> 7
+	6 -> 8
+	7 -> 9
+	8 -> 9
+	9 -> 5
+	10 -> 11
+	11 -> 2
+}
