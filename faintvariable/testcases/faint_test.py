@@ -1,9 +1,10 @@
 a = 1
-b = 2
-c = a
+c = 0
+b = 0
 
-while b > 1:
-    a += c
-    b -= 1
-
-print(b)
+if a > 1:
+    b = 2
+    c = 1
+else:
+    c = 4
+print(c)

@@ -40,7 +40,11 @@ class BasicBlock:
         self.is_dummy = False
         self.has_branched = False
         self.IN = None 
-        self.OUT = None 
+        self.OUT = None
+        self.faintgen = []
+        self.faintkill = []
+        self.faintout = []
+        self.faintin = []
 
     def add_instruction(self, instr):
         """
@@ -139,7 +143,7 @@ class BasicBlock:
             block_contents=f"block {self.id}:\n"
         # block_source = "\n".join(self.source)
         block_contents += f"\nIN = {self.IN}\n"
-        block_source = "\n".join([self.source[i] + ": " + f"{get_uses(self.ast_nodes[i])}" for i in range(len(self.ast_nodes))]) 
+        block_source = "\n".join([self.source[i] + ": " + f"gen = {self.faintgen[i]}, kill = {self.faintkill[i]}, out = {self.faintout[i]}, in = {self.faintin[i]} " for i in range(len(self.ast_nodes))]) 
         block_contents += f"{block_source}"
         GEN, KILL = basic_block_gen_kill(self)
 

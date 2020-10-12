@@ -9,26 +9,15 @@ OUT = None"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	1 [label="block 1:
 
-IN = set()
-a = 1: set()
-b = 2: set()
-c = 4: set()
-k = a: {'a'}
-d = a+2: {'a'}
-print((a+b)+c): {'b', 'c', 'a'}
-branch[a > b]: {'b', 'a'}
-GEN: set(),  KILL: {'a', 'd', 'b', 'k', 'c'} 
-OUT = {'c'}"]
-	node [color="#f2e996" shape=ellipse style=filled]
-	2 [label="block 2:
-
-IN = {'c'}
-c += 1: set()
-GEN: {'c'},  KILL: set() 
-OUT = set()"]
+IN = {'b'}
+a = 1: gen = {'a'}, kill = set(), out = set(), in = {'a'} 
+b = 2: gen = {'b'}, kill = set(), out = set(), in = {'b'} 
+print(a): gen = set(), kill = {'a'}, out = {'a', 'b'}, in = {'b'} 
+GEN: set(),  KILL: {'a', 'b'} 
+OUT = {'a', 'b'}"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	node [color="#97fcb2" shape=diamond style=filled]
-	3 [label="
+	2 [label="
 IN = None
 
 GEN: set(),  KILL: set() 
@@ -36,6 +25,4 @@ OUT = None"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	0 -> 1
 	1 -> 2
-	1 -> 3
-	2 -> 3
 }
