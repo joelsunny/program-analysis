@@ -1,0 +1,53 @@
+// CFG
+digraph {
+	node [color="#97fcb2" shape=diamond style=filled]
+	0 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	1 [label="block 1:
+
+IN = {'x', 'a'}
+0: x = 1: gen = {'x'}, kill = set(), out = {'x', 'a'}, in = {'x', 'a'} 
+1: a = 1: gen = {'a'}, kill = set(), out = {'x'}, in = {'x', 'a'} 
+GEN: set(),  KILL: {'x', 'a'} 
+OUT = {'x'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	2 [label="block 2:
+
+IN = {'x'}
+0: while[a > 1]: gen = set(), kill = {'a'}, out = {'x'}, in = {'x'} 
+GEN: {'a'},  KILL: set() 
+OUT = {'x'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	3 [label="block 3:
+
+IN = {'x'}
+0: x = x+1: gen = {'x'}, kill = set(), out = {'x'}, in = {'x'} 
+1: a = a-1: gen = {'a'}, kill = {'a'}, out = {'x'}, in = {'x'} 
+GEN: {'x', 'a'},  KILL: {'x', 'a'} 
+OUT = {'x'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	4 [label="block 4:
+
+IN = {'x', 'a'}
+0: print(\"done\"): gen = set(), kill = set(), out = {'x', 'a'}, in = {'x', 'a'} 
+GEN: set(),  KILL: set() 
+OUT = {'x', 'a'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#97fcb2" shape=diamond style=filled]
+	5 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	0 -> 1
+	1 -> 2
+	2 -> 3
+	2 -> 4
+	3 -> 2
+	4 -> 5
+}

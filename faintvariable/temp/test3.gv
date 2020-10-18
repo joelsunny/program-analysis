@@ -1,0 +1,94 @@
+// CFG
+digraph {
+	node [color="#97fcb2" shape=diamond style=filled]
+	0 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	1 [label="block 1:
+
+IN = {'d', 'q', 'b', 'p', 'r', 'a', 'c'}
+0: a = 1: gen = {'a'}, kill = set(), out = {'d', 'q', 'b', 'p', 'r', 'c'}, in = {'d', 'q', 'b', 'p', 'r', 'a', 'c'} 
+1: b = 2: gen = {'b'}, kill = set(), out = {'d', 'q', 'p', 'r', 'c'}, in = {'d', 'q', 'b', 'p', 'r', 'c'} 
+2: c = 3: gen = {'c'}, kill = set(), out = {'p', 'd', 'r', 'q'}, in = {'d', 'q', 'p', 'r', 'c'} 
+3: d = 4: gen = {'d'}, kill = set(), out = {'p', 'r', 'q'}, in = {'p', 'd', 'r', 'q'} 
+4: p = a < b: gen = {'p'}, kill = {'a', 'b'}, out = {'r', 'q'}, in = {'p', 'r', 'q'} 
+5: q = b < c: gen = {'q'}, kill = {'b', 'c'}, out = {'r'}, in = {'r', 'q'} 
+6: r = c < d: gen = {'r'}, kill = {'d', 'c'}, out = set(), in = {'r'} 
+GEN: set(),  KILL: {'d', 'q', 'b', 'p', 'r', 'a', 'c'} 
+OUT = set()"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	2 [label="block 2:
+
+IN = set()
+0: while[p]: gen = set(), kill = {'p'}, out = {'p'}, in = set() 
+GEN: {'p'},  KILL: set() 
+OUT = {'p'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	3 [label="block 3:
+
+IN = {'p'}
+0: while[q]: gen = set(), kill = {'q'}, out = {'p'}, in = {'p'} 
+GEN: {'q'},  KILL: set() 
+OUT = {'p'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	4 [label="block 4:
+
+IN = {'p', 'q'}
+0: while[r]: gen = set(), kill = {'r'}, out = {'p', 'q'}, in = {'p', 'q'} 
+GEN: {'r'},  KILL: set() 
+OUT = {'p', 'q'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	5 [label="block 5:
+
+IN = {'p', 'r', 'q'}
+0: c = c+1: gen = {'c'}, kill = {'c'}, out = {'p', 'r', 'q'}, in = {'p', 'r', 'q'} 
+1: r = c < d: gen = {'r'}, kill = {'d', 'c'}, out = {'p', 'q'}, in = {'p', 'r', 'q'} 
+GEN: {'d', 'c'},  KILL: {'r', 'c'} 
+OUT = {'p', 'q'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	6 [label="block 6:
+
+IN = {'p', 'q'}
+0: b = b+1: gen = {'b'}, kill = {'b'}, out = {'p', 'q'}, in = {'p', 'q'} 
+1: q = b < c: gen = {'q'}, kill = {'b', 'c'}, out = {'p'}, in = {'p', 'q'} 
+GEN: {'c', 'b'},  KILL: {'q', 'b'} 
+OUT = {'p'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	7 [label="block 7:
+
+IN = {'p'}
+0: a = a+1: gen = {'a'}, kill = {'a'}, out = {'p'}, in = {'p'} 
+1: p = a < b: gen = {'p'}, kill = {'a', 'b'}, out = set(), in = {'p'} 
+GEN: {'a', 'b'},  KILL: {'p', 'a'} 
+OUT = set()"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	8 [label="block 8:
+
+IN = {'p', 'd', 'q', 'b', 'r', 'c'}
+0: print(a): gen = set(), kill = {'a'}, out = {'d', 'q', 'b', 'p', 'r', 'a', 'c'}, in = {'p', 'd', 'q', 'b', 'r', 'c'} 
+GEN: {'a'},  KILL: set() 
+OUT = {'d', 'q', 'b', 'p', 'r', 'a', 'c'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#97fcb2" shape=diamond style=filled]
+	9 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	0 -> 1
+	1 -> 2
+	2 -> 3
+	2 -> 8
+	3 -> 4
+	3 -> 7
+	4 -> 5
+	4 -> 6
+	5 -> 4
+	6 -> 3
+	7 -> 2
+	8 -> 9
+}

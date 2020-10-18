@@ -22,13 +22,13 @@
 <title>1</title>
 <ellipse fill="#f2e996" stroke="#f2e996" cx="703.14" cy="-681.05" rx="376.36" ry="101.65"/>
 <text text-anchor="middle" x="703.14" y="-737.85" font-family="Times,serif" font-size="14.00">block 1:</text>
-<text text-anchor="middle" x="703.14" y="-706.85" font-family="Times,serif" font-size="14.00">IN = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}</text>
-<text text-anchor="middle" x="703.14" y="-691.85" font-family="Times,serif" font-size="14.00">a = 1: gen = {&#39;a&#39;}, kill = set(), out = {&#39;c&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;} </text>
+<text text-anchor="middle" x="703.14" y="-706.85" font-family="Times,serif" font-size="14.00">IN = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}</text>
+<text text-anchor="middle" x="703.14" y="-691.85" font-family="Times,serif" font-size="14.00">a = 1: gen = {&#39;a&#39;}, kill = set(), out = {&#39;c&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;} </text>
 <text text-anchor="middle" x="703.14" y="-676.85" font-family="Times,serif" font-size="14.00">c = 0: gen = {&#39;c&#39;}, kill = set(), out = {&#39;c&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;b&#39;} </text>
 <text text-anchor="middle" x="703.14" y="-661.85" font-family="Times,serif" font-size="14.00">b = 0: gen = {&#39;b&#39;}, kill = set(), out = {&#39;c&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;b&#39;} </text>
-<text text-anchor="middle" x="703.14" y="-646.85" font-family="Times,serif" font-size="14.00">branch[a &gt; 1]: gen = set(), kill = {&#39;a&#39;}, out = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;b&#39;} </text>
-<text text-anchor="middle" x="703.14" y="-631.85" font-family="Times,serif" font-size="14.00">GEN: set(), &#160;KILL: {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;} </text>
-<text text-anchor="middle" x="703.14" y="-616.85" font-family="Times,serif" font-size="14.00">OUT = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}</text>
+<text text-anchor="middle" x="703.14" y="-646.85" font-family="Times,serif" font-size="14.00">branch[a &gt; 1]: gen = set(), kill = {&#39;a&#39;}, out = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}, in = {&#39;c&#39;, &#39;b&#39;} </text>
+<text text-anchor="middle" x="703.14" y="-631.85" font-family="Times,serif" font-size="14.00">GEN: set(), &#160;KILL: {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;} </text>
+<text text-anchor="middle" x="703.14" y="-616.85" font-family="Times,serif" font-size="14.00">OUT = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}</text>
 </g>
 <!-- 0&#45;&gt;1 -->
 <g id="edge1" class="edge">
@@ -41,11 +41,11 @@
 <title>2</title>
 <ellipse fill="#f2e996" stroke="#f2e996" cx="352.14" cy="-462.62" rx="352.28" ry="80.72"/>
 <text text-anchor="middle" x="352.14" y="-504.42" font-family="Times,serif" font-size="14.00">block 2:</text>
-<text text-anchor="middle" x="352.14" y="-473.42" font-family="Times,serif" font-size="14.00">IN = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}</text>
-<text text-anchor="middle" x="352.14" y="-458.42" font-family="Times,serif" font-size="14.00">b = 2: gen = {&#39;b&#39;}, kill = set(), out = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;} </text>
-<text text-anchor="middle" x="352.14" y="-443.42" font-family="Times,serif" font-size="14.00">c = 1: gen = {&#39;c&#39;}, kill = set(), out = {&#39;a&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;} </text>
+<text text-anchor="middle" x="352.14" y="-473.42" font-family="Times,serif" font-size="14.00">IN = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}</text>
+<text text-anchor="middle" x="352.14" y="-458.42" font-family="Times,serif" font-size="14.00">b = 2: gen = {&#39;b&#39;}, kill = set(), out = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}, in = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;} </text>
+<text text-anchor="middle" x="352.14" y="-443.42" font-family="Times,serif" font-size="14.00">c = 1: gen = {&#39;c&#39;}, kill = set(), out = {&#39;b&#39;, &#39;a&#39;}, in = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;} </text>
 <text text-anchor="middle" x="352.14" y="-428.42" font-family="Times,serif" font-size="14.00">GEN: set(), &#160;KILL: {&#39;c&#39;, &#39;b&#39;} </text>
-<text text-anchor="middle" x="352.14" y="-413.42" font-family="Times,serif" font-size="14.00">OUT = {&#39;a&#39;, &#39;b&#39;}</text>
+<text text-anchor="middle" x="352.14" y="-413.42" font-family="Times,serif" font-size="14.00">OUT = {&#39;b&#39;, &#39;a&#39;}</text>
 </g>
 <!-- 1&#45;&gt;2 -->
 <g id="edge2" class="edge">
@@ -58,10 +58,10 @@
 <title>3</title>
 <ellipse fill="#f2e996" stroke="#f2e996" cx="1055.14" cy="-462.62" rx="333.09" ry="70.01"/>
 <text text-anchor="middle" x="1055.14" y="-496.92" font-family="Times,serif" font-size="14.00">block 3:</text>
-<text text-anchor="middle" x="1055.14" y="-465.92" font-family="Times,serif" font-size="14.00">IN = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}</text>
-<text text-anchor="middle" x="1055.14" y="-450.92" font-family="Times,serif" font-size="14.00">c = 4: gen = {&#39;c&#39;}, kill = set(), out = {&#39;a&#39;, &#39;b&#39;}, in = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;} </text>
+<text text-anchor="middle" x="1055.14" y="-465.92" font-family="Times,serif" font-size="14.00">IN = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}</text>
+<text text-anchor="middle" x="1055.14" y="-450.92" font-family="Times,serif" font-size="14.00">c = 4: gen = {&#39;c&#39;}, kill = set(), out = {&#39;b&#39;, &#39;a&#39;}, in = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;} </text>
 <text text-anchor="middle" x="1055.14" y="-435.92" font-family="Times,serif" font-size="14.00">GEN: set(), &#160;KILL: {&#39;c&#39;} </text>
-<text text-anchor="middle" x="1055.14" y="-420.92" font-family="Times,serif" font-size="14.00">OUT = {&#39;a&#39;, &#39;b&#39;}</text>
+<text text-anchor="middle" x="1055.14" y="-420.92" font-family="Times,serif" font-size="14.00">OUT = {&#39;b&#39;, &#39;a&#39;}</text>
 </g>
 <!-- 1&#45;&gt;3 -->
 <g id="edge3" class="edge">
@@ -74,10 +74,10 @@
 <title>4</title>
 <ellipse fill="#f2e996" stroke="#f2e996" cx="703.14" cy="-276" rx="344.22" ry="70.01"/>
 <text text-anchor="middle" x="703.14" y="-310.3" font-family="Times,serif" font-size="14.00">block 4:</text>
-<text text-anchor="middle" x="703.14" y="-279.3" font-family="Times,serif" font-size="14.00">IN = {&#39;a&#39;, &#39;b&#39;}</text>
-<text text-anchor="middle" x="703.14" y="-264.3" font-family="Times,serif" font-size="14.00">print(c): gen = set(), kill = {&#39;c&#39;}, out = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}, in = {&#39;a&#39;, &#39;b&#39;} </text>
+<text text-anchor="middle" x="703.14" y="-279.3" font-family="Times,serif" font-size="14.00">IN = {&#39;b&#39;, &#39;a&#39;}</text>
+<text text-anchor="middle" x="703.14" y="-264.3" font-family="Times,serif" font-size="14.00">print(c): gen = set(), kill = {&#39;c&#39;}, out = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}, in = {&#39;b&#39;, &#39;a&#39;} </text>
 <text text-anchor="middle" x="703.14" y="-249.3" font-family="Times,serif" font-size="14.00">GEN: {&#39;c&#39;}, &#160;KILL: set() </text>
-<text text-anchor="middle" x="703.14" y="-234.3" font-family="Times,serif" font-size="14.00">OUT = {&#39;c&#39;, &#39;a&#39;, &#39;b&#39;}</text>
+<text text-anchor="middle" x="703.14" y="-234.3" font-family="Times,serif" font-size="14.00">OUT = {&#39;c&#39;, &#39;b&#39;, &#39;a&#39;}</text>
 </g>
 <!-- 2&#45;&gt;4 -->
 <g id="edge4" class="edge">

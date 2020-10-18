@@ -19,6 +19,7 @@ def usage():
 
 BLOCK_LEADERS = {"If", "While"}
 BLOCK_COUNT = 0
+INSTR_COUNT = 0
 
 class BasicBlock:
     """
@@ -33,6 +34,7 @@ class BasicBlock:
         self.id = BLOCK_COUNT
         BLOCK_COUNT += 1
         self.source = []
+        self.valuenumbers = []
         self.ast_nodes = []
         self.predecessors = []
         self.neighbours = []
@@ -51,7 +53,11 @@ class BasicBlock:
         add a new instruction to the basic block
         """
         self.source.append(instr)
-
+        if instr["_type"] == "Assign" or instr["_type"] == "AugAssign":
+            INSTR_COUNT += 1
+            self.valuenumbers.append[INSTR_COUNT]
+        else: 
+            self.valuenumbers.append(-1)
     def add_neighbour(self, block):
         """
         add a neighbour to the block
@@ -72,7 +78,25 @@ class BasicBlock:
             self.neighbours = self.neighbours[1:]
         else:
             self.neighbours = self.neighbours[0:idx] + self.neighbours[idx+1:]
-        
+
+    def to_code(self, indentation=0):
+        prefix = "\t"*indentation
+        source = ""
+        last = None
+        next_indent = 0
+        for i,node in enumerate(self.ast_nodes):
+            source += prefix + asttostr.ast_to_str(node) + "\n"
+            last = node
+        if last != None:
+            print(f"last = {last['_type']}")
+        if last == None:
+            next_indent = 0
+        elif last["_type"] == "Compare":
+            next_indent = 1
+        else: 
+            next_indent = -1
+        return source, next_indent
+
     def __repr__(self):
         # TODO: remove this
         # return json.dumps(self.ast_nodes, indent=4)
@@ -143,7 +167,7 @@ class BasicBlock:
             block_contents=f"block {self.id}:\n"
         # block_source = "\n".join(self.source)
         block_contents += f"\nIN = {self.IN}\n"
-        block_source = "\n".join([self.source[i] + ": " + f"gen = {self.faintgen[i]}, kill = {self.faintkill[i]}, out = {self.faintout[i]}, in = {self.faintin[i]} " for i in range(len(self.ast_nodes))]) 
+        block_source = "\n".join([f"{i}: " + self.source[i] + ": " + f"gen = {self.faintgen[i]}, kill = {self.faintkill[i]}, out = {self.faintout[i]}, in = {self.faintin[i]} " for i in range(len(self.ast_nodes))]) 
         block_contents += f"{block_source}"
         GEN, KILL = basic_block_gen_kill(self)
 
@@ -204,7 +228,6 @@ class CFG:
         else:
             self.adjacency_list[b1.id] = self.adjacency_list[b1.id][0:idx] + self.adjacency_list[b1.id][idx+1:]
 
-
     def generate_dot(self):
         """
         function to generate the dotfile for rendering
@@ -250,6 +273,105 @@ class CFG:
             block = self.blocks[block]
             if len(block.source) == 0:
                 block.is_dummy = True
+
+    def faintvariable_opt(self, ast, entry=None):
+        """
+        Do a pre-order traversal of the AST to generate the control flow graph.
+        The algorithm adds the source instructions to the current basic block
+        until a branch leader is encountered.
+        """
+        if entry == None:
+            curr_block = self.root
+        else:
+            curr_block = entry
+
+        for stmt in ast:
+            stmt_type = stmt["_type"]
+
+            # if stmt is not a block leader, add it to the current block
+            if stmt_type not in BLOCK_LEADERS:
+                curr_block.add_instruction(asttostr.ast_to_str(stmt))
+                curr_block.ast_nodes.append(stmt)
+            else:
+                if curr_block.has_branched:
+                    t_block = BasicBlock()
+                    self.add_edge(curr_block, t_block)
+                    curr_block = t_block
+                if stmt_type == "If":
+                    # If(expr test, stmt* body, stmt* orelse)
+                    t = asttostr.ast_to_str(stmt["test"])
+                    instr = f"branch[{t}]"
+                    curr_block.add_instruction(instr)
+                    curr_block.ast_nodes.append(stmt["test"])
+                    curr_block.has_branched = True
+                    if_block = curr_block
+
+                    # if body processing
+                    body = BasicBlock()
+                    self.add_edge(curr_block, body)
+                    body = self.construct_from_ast(stmt["body"], body)
+                    
+                    # orelse node processing
+                    if len(stmt["orelse"]) != 0:
+                        orelse = BasicBlock()
+                        self.add_edge(curr_block, orelse)
+                        orelse = self.construct_from_ast(stmt["orelse"], orelse)
+
+                    # create a new block and set it to current
+                    t_block = BasicBlock()
+                    self.add_edge(body, t_block)
+                    if len(stmt["orelse"]) != 0:
+                        self.add_edge(orelse, t_block)
+                    else:
+                        self.add_edge(if_block, t_block)
+                    curr_block = t_block
+
+                elif stmt_type == "While":
+                    # While(expr test, stmt* body, stmt* orelse)
+                    if len(curr_block.source) != 0:
+                        t_block = BasicBlock()
+                        self.add_edge(curr_block, t_block)
+                        curr_block = t_block
+                    while_block = curr_block
+                    t = asttostr.ast_to_str(stmt["test"])
+                    curr_block.ast_nodes.append(stmt["test"])
+                    instr = f"while[{t}]"
+                    curr_block.add_instruction(instr)
+                    curr_block.has_branched = True
+
+                    # while body processing
+                    body = BasicBlock()
+                    self.add_edge(curr_block, body)
+                    body = self.construct_from_ast(stmt["body"], body)
+                    # add back edge from body of while to the branch condition
+                    self.add_edge(body, while_block)
+                    # check if the returned block is a dummy node
+                    # self.add_edge(body, curr_block)
+                    if len(body.source) == 0:
+                        if len(body.predecessors) > 1:
+                            self.add_edge(body, curr_block)
+                        elif len(body.predecessors) == 1:
+                            self.add_edge(body.predecessors[0], curr_block)
+                            self.remove_node(body)
+                        else: 
+                            self.add_edge(body, curr_block)
+                    
+                    # orelse node processing
+                    if len(stmt["orelse"]) != 0:
+                        orelse = BasicBlock()
+                        self.add_edge(curr_block, orelse)
+                        self.construct_from_ast(stmt["orelse"], orelse)
+                        curr_block = orelse
+                    
+                    # create a new basic block and set it to current
+                    t_block = BasicBlock()
+                    self.add_edge(while_block, t_block)
+                    curr_block = t_block
+                else:
+                    print(f"Unimplemented: {stmt_type}")
+        
+        return curr_block
+
 
     def construct_from_ast(self, ast, entry=None):
         """
@@ -348,6 +470,17 @@ class CFG:
                     print(f"Unimplemented: {stmt_type}")
         
         return curr_block
+
+    def cfg_to_code(self):
+        prefix = 0
+        source = ""
+        for b in self.blocks:
+            block = self.blocks[b]
+            s, n = block.to_code(prefix)
+            source += s
+            prefix += n
+            print(f"n = {n}, prefix = {prefix}")
+        return source
 
     def __repr__(self):
         graph = ""

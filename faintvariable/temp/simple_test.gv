@@ -9,15 +9,38 @@ OUT = None"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	1 [label="block 1:
 
-IN = {'b'}
-a = 1: gen = {'a'}, kill = set(), out = set(), in = {'a'} 
-b = 2: gen = {'b'}, kill = set(), out = set(), in = {'b'} 
-print(a): gen = set(), kill = {'a'}, out = {'a', 'b'}, in = {'b'} 
-GEN: set(),  KILL: {'a', 'b'} 
+IN = {'a', 'c', 'b'}
+a = 1: gen = {'a'}, kill = set(), out = {'c', 'b'}, in = {'a', 'c', 'b'} 
+b = 2: gen = {'b'}, kill = set(), out = {'c', 'b'}, in = {'c', 'b'} 
+print(a): gen = set(), kill = {'a'}, out = {'c', 'b'}, in = {'c', 'b'} 
+c = 1: gen = {'c'}, kill = set(), out = {'c', 'b'}, in = {'c', 'b'} 
+branch[a > 0]: gen = set(), kill = {'a'}, out = {'a', 'c', 'b'}, in = {'c', 'b'} 
+GEN: set(),  KILL: {'a', 'c', 'b'} 
+OUT = {'a', 'c', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	2 [label="block 2:
+
+IN = {'a', 'c', 'b'}
+c = 9: gen = {'c'}, kill = set(), out = {'a', 'b'}, in = {'a', 'c', 'b'} 
+GEN: set(),  KILL: {'c'} 
 OUT = {'a', 'b'}"]
 	node [color="#f2e996" shape=ellipse style=filled]
+	3 [label="block 3:
+
+IN = {'a', 'c', 'b'}
+c = 0: gen = {'c'}, kill = set(), out = {'a', 'b'}, in = {'a', 'c', 'b'} 
+GEN: set(),  KILL: {'c'} 
+OUT = {'a', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	4 [label="block 4:
+
+IN = {'a', 'b'}
+print(c): gen = set(), kill = {'c'}, out = {'a', 'c', 'b'}, in = {'a', 'b'} 
+GEN: {'c'},  KILL: set() 
+OUT = {'a', 'c', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
 	node [color="#97fcb2" shape=diamond style=filled]
-	2 [label="
+	5 [label="
 IN = None
 
 GEN: set(),  KILL: set() 
@@ -25,4 +48,8 @@ OUT = None"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	0 -> 1
 	1 -> 2
+	1 -> 3
+	2 -> 4
+	3 -> 4
+	4 -> 5
 }

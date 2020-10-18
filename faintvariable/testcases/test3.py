@@ -6,8 +6,8 @@ p = a < b
 q = b < c
 r = c < d
 while p:
-    while q:
-        while r:
+    while q>0:
+        while r>0:
             c = c + 1
             r = c < d
         b = b + 1
