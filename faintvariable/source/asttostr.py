@@ -492,8 +492,8 @@ def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
                 orelse = [ast_to_str(i, OrElse=True, prefix=prefix) for i in ast["orelse"]]
                 orelse = "\n".join([i for i in orelse if i != ""])
             else:
-                if len(orelse) > 0:
-                    orelse = "else:"
+                if len(ast["orelse"]) > 0:
+                    orelse = "\t"*prefix + "else:"
                     for i, node in enumerate(ast["orelse"]):
                         orelse += "\n" + ast_to_str(node, prefix=prefix+1)
 
@@ -522,7 +522,27 @@ def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
         if ast["asname"] != None:
             asname = ast["asname"]
             stmt += f" as {asname}"
-
+    elif expr_type == "Break":
+        stmt = "break"
+    elif expr_type == "FunctionDef":
+        # FunctionDef(identifier name, arguments args,
+        #                stmt* body, expr* decorator_list, expr? returns,
+        #                string? type_comment)
+        name = ast["name"]
+        args = ast_to_str(ast["args"])
+        # args = ", ".join(args)
+        body = ""
+        for i, node in enumerate(ast["body"]):
+            t = ast_to_str(node, prefix=prefix+1)
+            if t != "":
+                body += "\n" + ast_to_str(node, prefix=prefix+1)
+        stmt = f"def {name}({args}):{body}"
+    elif expr_type == "Return":
+        # Return(expr? value)
+        stmt = "return"
+        if ast["value"] != None:
+            value = ast_to_str(ast["value"])
+        stmt += f" {value}"
     else:
         return f"unimplemented: {expr_type}"
     

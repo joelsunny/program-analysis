@@ -1,0 +1,211 @@
+// CFG
+digraph {
+	node [color="#97fcb2" shape=diamond style=filled]
+	0 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	1 [label="block 1:
+
+IN = {'s', 'a', 'q', 'c', 't', 'r', 'd', 'u', 'p', 'b'}
+0: a = 235: gen = {'a'}, kill = set(), out = {'s', 'q', 'c', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'q', 'c', 't', 'r', 'd', 'u', 'p', 'b'} 
+1: b = 51: gen = {'b'}, kill = set(), out = {'s', 'q', 'c', 't', 'r', 'd', 'u', 'p'}, in = {'s', 'q', 'c', 't', 'r', 'd', 'u', 'p', 'b'} 
+2: c = 47: gen = {'c'}, kill = set(), out = {'s', 'q', 't', 'r', 'd', 'u', 'p'}, in = {'s', 'q', 'c', 't', 'r', 'd', 'u', 'p'} 
+3: d = 55: gen = {'d'}, kill = set(), out = {'s', 'q', 't', 'r', 'u', 'p'}, in = {'s', 'q', 't', 'r', 'd', 'u', 'p'} 
+4: p = a < b: gen = {'p'}, kill = {'b', 'a'}, out = {'s', 'q', 't', 'r', 'u'}, in = {'s', 'q', 't', 'r', 'u', 'p'} 
+5: q = a < c: gen = {'q'}, kill = {'a', 'c'}, out = {'s', 'r', 'u', 't'}, in = {'s', 'q', 't', 'r', 'u'} 
+6: r = a < d: gen = {'r'}, kill = {'d', 'a'}, out = {'s', 'u', 't'}, in = {'s', 'r', 'u', 't'} 
+7: s = b < c: gen = {'s'}, kill = {'b', 'c'}, out = {'u', 't'}, in = {'s', 'u', 't'} 
+8: t = b < d: gen = {'t'}, kill = {'b', 'd'}, out = {'u'}, in = {'u', 't'} 
+9: u = c < d: gen = {'u'}, kill = {'d', 'c'}, out = set(), in = {'u'} 
+-1: branch[p]: gen = set(), kill = {'p'}, out = {'p'}, in = set() 
+GEN: set(),  KILL: {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'} 
+OUT = {'p'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	2 [label="block 2:
+
+IN = {'s', 'b', 'p', 't'}
+-1: branch[q]: gen = set(), kill = {'q'}, out = {'s', 'q', 't', 'p', 'b'}, in = {'s', 'b', 'p', 't'} 
+GEN: {'q'},  KILL: set() 
+OUT = {'s', 'q', 't', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	3 [label="block 3:
+
+IN = {'s', 'b', 'q', 'c', 't', 'u', 'p'}
+-1: branch[r]: gen = set(), kill = {'r'}, out = {'s', 'q', 'c', 't', 'r', 'u', 'p', 'b'}, in = {'s', 'b', 'q', 'c', 't', 'u', 'p'} 
+GEN: {'r'},  KILL: set() 
+OUT = {'s', 'q', 'c', 't', 'r', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	4 [label="block 4:
+
+IN = {'s', 'q', 'c', 't', 'r', 'd', 'u', 'p', 'b'}
+-1: print(a): gen = set(), kill = {'a'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'q', 'c', 't', 'r', 'd', 'u', 'p', 'b'} 
+10: a += 1: gen = set(), kill = set(), out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'} 
+GEN: {'a'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	5 [label="block 5:
+
+IN = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'}
+-1: print(d): gen = set(), kill = {'d'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'} 
+GEN: {'d'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	6 [label="block 6:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	7 [label="block 7:
+
+IN = {'s', 'b', 'a', 'q', 't', 'r', 'p'}
+-1: branch[u]: gen = set(), kill = {'u'}, out = {'s', 'a', 'q', 't', 'r', 'u', 'p', 'b'}, in = {'s', 'b', 'a', 'q', 't', 'r', 'p'} 
+GEN: {'u'},  KILL: set() 
+OUT = {'s', 'a', 'q', 't', 'r', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	8 [label="block 8:
+
+IN = {'s', 'a', 'q', 't', 'r', 'd', 'u', 'p', 'b'}
+-1: print(c): gen = set(), kill = {'c'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'q', 't', 'r', 'd', 'u', 'p', 'b'} 
+GEN: {'c'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	9 [label="block 9:
+
+IN = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'}
+-1: print(d): gen = set(), kill = {'d'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'} 
+GEN: {'d'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	10 [label="block 10:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	11 [label="block 11:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	12 [label="block 12:
+
+IN = {'r', 'a', 'q', 'p'}
+-1: branch[s]: gen = set(), kill = {'s'}, out = {'s', 'a', 'q', 'r', 'p'}, in = {'r', 'a', 'q', 'p'} 
+GEN: {'s'},  KILL: set() 
+OUT = {'s', 'a', 'q', 'r', 'p'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	13 [label="block 13:
+
+IN = {'s', 'a', 'c', 'q', 'r', 'u', 'p'}
+-1: branch[t]: gen = set(), kill = {'t'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p'}, in = {'s', 'a', 'c', 'q', 'r', 'u', 'p'} 
+GEN: {'t'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	14 [label="block 14:
+
+IN = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p'}
+-1: print(b): gen = set(), kill = {'b'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p'} 
+GEN: {'b'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	15 [label="block 15:
+
+IN = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'}
+-1: print(d): gen = set(), kill = {'d'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'} 
+GEN: {'d'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	16 [label="block 16:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	17 [label="block 17:
+
+IN = {'s', 'b', 'a', 'q', 't', 'r', 'p'}
+-1: branch[u]: gen = set(), kill = {'u'}, out = {'s', 'a', 'q', 't', 'r', 'u', 'p', 'b'}, in = {'s', 'b', 'a', 'q', 't', 'r', 'p'} 
+GEN: {'u'},  KILL: set() 
+OUT = {'s', 'a', 'q', 't', 'r', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	18 [label="block 18:
+
+IN = {'s', 'a', 'q', 't', 'r', 'd', 'u', 'p', 'b'}
+-1: print(c): gen = set(), kill = {'c'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'q', 't', 'r', 'd', 'u', 'p', 'b'} 
+GEN: {'c'},  KILL: set() 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	19 [label="block 19:
+
+IN = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'}
+-1: print(d): gen = set(), kill = {'d'}, out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'c', 'q', 't', 'r', 'u', 'p', 'b'} 
+11: d = d: gen = {'d'}, kill = set(), out = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}, in = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'} 
+GEN: {'d'},  KILL: {'d'} 
+OUT = {'s', 'a', 'c', 'q', 't', 'r', 'd', 'u', 'p', 'b'}"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	20 [label="block 20:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#ffb1a3" shape=ellipse style=filled]
+	21 [label="block 21:
+
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	node [color="#97fcb2" shape=diamond style=filled]
+	22 [label="
+IN = None
+
+GEN: set(),  KILL: set() 
+OUT = None"]
+	node [color="#f2e996" shape=ellipse style=filled]
+	0 -> 1
+	1 -> 2
+	1 -> 12
+	2 -> 3
+	2 -> 7
+	3 -> 4
+	3 -> 5
+	4 -> 6
+	5 -> 6
+	6 -> 11
+	7 -> 8
+	7 -> 9
+	8 -> 10
+	9 -> 10
+	10 -> 11
+	11 -> 22
+	12 -> 13
+	12 -> 17
+	13 -> 14
+	13 -> 15
+	14 -> 16
+	15 -> 16
+	16 -> 21
+	17 -> 18
+	17 -> 19
+	18 -> 20
+	19 -> 20
+	20 -> 21
+	21 -> 22
+}

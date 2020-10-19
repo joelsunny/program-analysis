@@ -69,52 +69,11 @@ def get_uses(node, key=None):
                 uses = uses.union(get_uses(n))
     return uses
 
-# 
-# def basic_block_gen_kill(block):
-#     """
-#     generate the GEN, KILL sets of a single basic block
-#     """
-#     GEN = set()
-#     KILL = set()
-
-#     for node in block.ast_nodes:
-#         gen, kill = instruction_gen_kill(node)
-#         GEN = GEN.union(gen.difference(KILL)) # a = b + a, is a use for a. so gen first, then kill
-#         KILL = KILL.union(kill)
-
-#     return GEN, KILL
-
-# def get_gen_kill_sets(blocks, cfg):
-#     """
-#     generate the GEN, KILL sets of all basic blocks in the control flow graph
-#     """
-#     GEN = []
-#     KILL = []
-
-#     for b in blocks:
-#        block = cfg.blocks[b]
-#        gen, kill = basic_block_gen_kill(block)
-#        GEN.append(gen)
-#        KILL.append(kill) 
-#     return GEN, KILL
-
 def init_block(block, U):
     block.faintgen = [set()]*len(block.ast_nodes)
     block.faintkill = [set()]*len(block.ast_nodes)
     block.faintout = [U]*len(block.ast_nodes)
     block.faintin = [set()]*len(block.ast_nodes)
-
-# def get_block_gen_kill(block):
-#     KILL = set()
-#     GEN = set()
-
-#     for gen in block.faintgen:
-#         GEN = GEN.union(gen)
-    
-#     for kill in block.faintkill:
-#         KILL = KILL.union(kill)
-    
-#     return GEN.difference(KILL), KILL
 
 def get_call_arguments(node, key=None): 
     uses = set()
@@ -163,7 +122,6 @@ def intrablock_fv2(block, block_out, block_in):
         # print(f"block {block.id}: {block.source[idx]} : in = ({block.faintgen[idx]} - {block.faintkill[idx]}) U ({block.faintout[idx]} - {block.faintkill[idx]})")
         block.faintin[idx] = (block.faintgen[idx].difference(block.faintkill[idx])).union(block.faintout[idx].difference(block.faintkill[idx]))
         # print(f"block {block.id}: {block.source[idx]} : in = ({block.faintgen[idx]} - {block.faintkill[idx]}) U ({block.faintout[idx]} - {block.faintkill[idx]}) = { block.faintin[idx]}")
-
 
 def get_all_targets(cfg):
     res = set()
@@ -307,7 +265,7 @@ if __name__ == '__main__':
     outfile = os.path.basename(ast_file)
     outfile = outfile.split(".")[:-1]
     outfile = "".join(outfile)
-    render_graph(cfg, outfile=outfile)
+    # render_graph(cfg, outfile=outfile)
     faintvariable(cfg)
     faint, faint_source = get_faintvariables(cfg)
     print(faint_source)

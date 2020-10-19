@@ -12,6 +12,7 @@ if p:
     if q:
         if r:
             print(a)
+            a += 1
         else:
             print(d)
     elif u:
@@ -28,3 +29,4 @@ else:
         print(c)
     else:
         print(d)
+        d = d

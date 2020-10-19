@@ -1,5 +1,6 @@
 def foo(a,b):
     print(a)
+    return a, b
 
 a = 1
 b = 2

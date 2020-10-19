@@ -1,9 +1,9 @@
 def recur_factorial(n):
    p = n == 1
    if p:
-       return n
+      return n
    else:
-       return n*recur_factorial(n-1)
+      return n*recur_factorial(n-1)
 
 num = 7
 
