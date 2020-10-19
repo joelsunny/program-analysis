@@ -69,57 +69,34 @@ def get_uses(node, key=None):
                 uses = uses.union(get_uses(n))
     return uses
 
-def instruction_gen_kill(instr):
-    """
-    generate the GEN, KILL sets of a single instruction
-    """
-    KILL = set()
-    GEN = set()
+# 
+# def basic_block_gen_kill(block):
+#     """
+#     generate the GEN, KILL sets of a single basic block
+#     """
+#     GEN = set()
+#     KILL = set()
 
-    stmt_type = instr["_type"]
-    if stmt_type == "Assign":
-        # Assign(expr* targets, expr value, string? type_comment)
-        lhs = get_targets(instr["targets"])
-        rhs = get_uses(instr["value"])
-        for v in lhs:
-            if v not in rhs:
-                GEN.add(v)
-    elif stmt_type == "AugAssign":
-        # AugAssign(expr target, operator op, expr value)
-        # GEN = {instr["target"]["id"]}.union(get_uses(instr["value"]))
-        pass
-    else:
-        KILL = get_uses(instr)
-    
-    return GEN, KILL
+#     for node in block.ast_nodes:
+#         gen, kill = instruction_gen_kill(node)
+#         GEN = GEN.union(gen.difference(KILL)) # a = b + a, is a use for a. so gen first, then kill
+#         KILL = KILL.union(kill)
 
-def basic_block_gen_kill(block):
-    """
-    generate the GEN, KILL sets of a single basic block
-    """
-    GEN = set()
-    KILL = set()
+#     return GEN, KILL
 
-    for node in block.ast_nodes:
-        gen, kill = instruction_gen_kill(node)
-        GEN = GEN.union(gen.difference(KILL)) # a = b + a, is a use for a. so gen first, then kill
-        KILL = KILL.union(kill)
+# def get_gen_kill_sets(blocks, cfg):
+#     """
+#     generate the GEN, KILL sets of all basic blocks in the control flow graph
+#     """
+#     GEN = []
+#     KILL = []
 
-    return GEN, KILL
-
-def get_gen_kill_sets(blocks, cfg):
-    """
-    generate the GEN, KILL sets of all basic blocks in the control flow graph
-    """
-    GEN = []
-    KILL = []
-
-    for b in blocks:
-       block = cfg.blocks[b]
-       gen, kill = basic_block_gen_kill(block)
-       GEN.append(gen)
-       KILL.append(kill) 
-    return GEN, KILL
+#     for b in blocks:
+#        block = cfg.blocks[b]
+#        gen, kill = basic_block_gen_kill(block)
+#        GEN.append(gen)
+#        KILL.append(kill) 
+#     return GEN, KILL
 
 def init_block(block, U):
     block.faintgen = [set()]*len(block.ast_nodes)
@@ -127,17 +104,34 @@ def init_block(block, U):
     block.faintout = [U]*len(block.ast_nodes)
     block.faintin = [set()]*len(block.ast_nodes)
 
-def get_block_gen_kill(block):
-    KILL = set()
-    GEN = set()
+# def get_block_gen_kill(block):
+#     KILL = set()
+#     GEN = set()
 
-    for gen in block.faintgen:
-        GEN = GEN.union(gen)
+#     for gen in block.faintgen:
+#         GEN = GEN.union(gen)
     
-    for kill in block.faintkill:
-        KILL = KILL.union(kill)
+#     for kill in block.faintkill:
+#         KILL = KILL.union(kill)
     
-    return GEN.difference(KILL), KILL
+#     return GEN.difference(KILL), KILL
+
+def get_call_arguments(node, key=None): 
+    uses = set()
+    if key == "func":
+        return uses
+    if node["_type"] == "Call":
+        for arg in node["args"]:
+            uses = uses.union(get_uses(arg))
+        return uses
+            
+    for key in node:
+        if isinstance(node[key], dict):
+            uses = uses.union(get_call_arguments(node[key], key=key))
+        elif isinstance(node[key], list):
+            for n in node[key]:
+                uses = uses.union(get_call_arguments(n))
+    return uses
 
 def intrablock_fv2(block, block_out, block_in):
     for i in range(len(block.ast_nodes)):
@@ -152,8 +146,13 @@ def intrablock_fv2(block, block_out, block_in):
             # block.faintgen[idx] = get_targets(stmt["targets"]).difference(get_uses(stmt))
             
             block.faintkill[idx] = get_uses(stmt) if list(get_targets(stmt["targets"]))[0] not in block.faintout[idx] else set()
+            args = get_call_arguments(stmt)
+            if len(args) > 0:
+                block.faintkill[idx] = block.faintkill[idx].union(args)
+                block.faintout[idx] = block.faintout[idx].difference(ts)
             if 'x' in ts:
-                print(f"source = {block.source[idx]}, out = {block.faintout[idx]}, kill = {block.faintkill[idx] }")
+                print(f"source = {block.source[idx]}, out = {block.faintout[idx]}, kill = {block.faintkill[idx]}, uses = {get_uses(stmt)}")
+                print(f"args = {args}")
         elif stmt_type == "AugAssign":
             pass
         else:
@@ -165,35 +164,6 @@ def intrablock_fv2(block, block_out, block_in):
         block.faintin[idx] = (block.faintgen[idx].difference(block.faintkill[idx])).union(block.faintout[idx].difference(block.faintkill[idx]))
         # print(f"block {block.id}: {block.source[idx]} : in = ({block.faintgen[idx]} - {block.faintkill[idx]}) U ({block.faintout[idx]} - {block.faintkill[idx]}) = { block.faintin[idx]}")
 
-def intrablock_fv(block, block_out, block_in):
-    for i, stmt in enumerate(block.ast_nodes):
-        stmt_type = stmt["_type"]
-        if stmt_type == "Assign":
-            ts = get_targets(stmt["targets"])
-            block.faintgen[i] = get_targets(stmt["targets"])
-            # block.faintgen[i] = get_targets(stmt["targets"]).difference(get_uses(stmt))
-            if list(ts)[0] == "x" and block.id == 3:
-                # print("uses")
-                # print(get_uses(stmt))
-                # print(block.faintout[i])
-                pass
-            block.faintkill[i] = get_uses(stmt) if list(get_targets(stmt["targets"]))[0] not in block.faintout[i] else set()
-            # print(block.faintkill[i])
-        elif stmt_type == "AugAssign":
-            pass
-        else:
-            block.faintkill[i] = get_uses(stmt)
-        
-        # note: kill and gen are interchanged for fv analysis
-        # in = out - gen - kill
-        # block.faintin[i] = block.faintout[i].difference(block.faintgen[i]).difference(block.faintkill[i])
-        # block.faintin[i] = block.faintout[i].union(block.faintgen[i]).difference(block.faintkill[i])
-
-        block.faintout[i] = block_out if i == len(block.ast_nodes)-1 else block.faintin[i+1]
-        block.faintin[i] = (block.faintgen[i].difference(block.faintkill[i])).union(block.faintout[i].difference(block.faintkill[i]))
-        # block.faintin[i] = block.faintout[i-1] if i != 0 else block_in 
-        # block.faintin[i] = block.faintgen[i].union(block.faintout[i].difference(block.faintkill[i]))
-        # block.faintout[i] = block_out if i == len(block.ast_nodes)-1 else block.faintin[i+1]
 
 def get_all_targets(cfg):
     res = set()
@@ -206,10 +176,10 @@ def get_all_targets(cfg):
 
 def faintvariable(cfg):
     blocks = get_block_ordering(cfg)
-    print(blocks)
+    # print(blocks)
     successors = get_successor_info(cfg)
     U = get_all_targets(cfg)
-    pprint(U)
+    # pprint(U)
     IN = [U]*len(blocks)
     OUT = [U]*len(blocks)
     OUT[0] = U
@@ -223,8 +193,8 @@ def faintvariable(cfg):
 
     flag = False 
     prev_in = [i for i in IN]
-    k = 0
-    while k < 10:
+    # k = 0
+    while not flag:
         for i, block in enumerate(blocks):
             # intra block calculation
             # if block == 2:
@@ -242,11 +212,11 @@ def faintvariable(cfg):
             IN[i] = cfg.blocks[block].faintin[0]
         if prev_in == IN:
             flag = True
-            print("amzing")
+            # print("amzing")
             # exit(0)
         # print(f"flag = {flag}")
         prev_in = [i for i in IN]
-        k+=1
+        # k+=1
 
     return IN, OUT, blocks
 
@@ -278,11 +248,48 @@ def get_faintvariables(cfg):
             continue
         for i, stmt in enumerate(block.source):
             stmt_type = block.ast_nodes[i]["_type"]
-            if stmt_type == "Assign" or stmt_type == "AugAssign":
+            if stmt_type == "Assign":
                 if list(get_targets(block.ast_nodes[i]["targets"]))[0] in block.faintout[i]:
-                    faint.add((block.id, i))
+                    faint.add(block.ast_nodes[i]["instr_id"])
+                    faint_source.append(stmt)
+            elif stmt_type == "AugAssign":
+                if block.ast_nodes[i]["target"]["id"] in block.faintout[i]:
+                    faint.add(block.ast_nodes[i]["instr_id"])
                     faint_source.append(stmt)
     return faint, faint_source
+
+def remove_faint(cfg, faint, outfile):
+    """
+    preoreder traversal, delete fain Assign/AugAssign nodes
+    """
+    def mark_node(node, faint):
+        if not isinstance(node, dict):
+            return idx
+        if node["_type"] == "Assign" or node["_type"] == "AugAssign":
+            idx = node["instr_id"]
+            if idx in faint:
+                node["is_faint"] = True
+        else: 
+            node["is_faint"] = False
+            
+        for key in node:
+            if isinstance(node[key], dict):
+                idx = mark_node(node[key], faint)
+            elif isinstance(node[key], list):
+                for n in node[key]:
+                    idx = mark_node(n, faint)
+
+    for stmt in cfg.augmented_ast["body"]:
+        mark_node(stmt, faint)
+    
+    source = ""
+    for node in cfg.augmented_ast["body"]:
+        t = asttostr.ast_to_str(node)
+        if t != "":
+            source += "\n" + asttostr.ast_to_str(node)
+    print(source)
+    with open(f'temp/{outfile}_optimized.py', 'w') as f: 
+        f.write(source)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -291,25 +298,17 @@ if __name__ == '__main__':
     ast_file = sys.argv[1]
     # load AST json
     ast = json.loads(open(ast_file).read())
-    for node in ast["body"]:
-        print(asttostr.ast_to_str(node))
-
-    exit(2)
     # initialise CFG object
-    # cfg = CFG()
+    cfg = CFG()
     # # construct control flow graph from ast
-    # cfg.from_ast(ast)
-    # s = cfg.cfg_to_code()
-    # print(s)
-    # liveness analysis
-    # augment_blocks(cfg)
+    cfg.from_ast(ast)
+    augment_blocks(cfg)
     # # render cfg as image
-    # outfile = os.path.basename(ast_file)
-    # outfile = outfile.split(".")[:-1]
-    # outfile = "".join(outfile)
-    # render_graph(cfg, outfile=outfile)
-    # faintvariable(cfg)
-    # faint, faint_source = get_faintvariables(cfg)
-    # print(faint, faint_source)
-    # for node in ast["body"]:
-    #     print(asttostr.ast_to_str2(node, block=1, idx=0 faint=faint))
+    outfile = os.path.basename(ast_file)
+    outfile = outfile.split(".")[:-1]
+    outfile = "".join(outfile)
+    render_graph(cfg, outfile=outfile)
+    faintvariable(cfg)
+    faint, faint_source = get_faintvariables(cfg)
+    print(faint_source)
+    remove_faint(cfg, faint, outfile)

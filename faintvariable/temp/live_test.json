@@ -216,45 +216,6 @@
                     }
                 ]
             }
-        },
-        {
-            "_type": "Expr",
-            "col_offset": 0,
-            "end_col_offset": 13,
-            "end_lineno": 9,
-            "lineno": 9,
-            "value": {
-                "_type": "Call",
-                "args": [
-                    {
-                        "_type": "Constant",
-                        "col_offset": 6,
-                        "end_col_offset": 12,
-                        "end_lineno": 9,
-                        "kind": null,
-                        "lineno": 9,
-                        "n": "done",
-                        "s": "done",
-                        "value": "done"
-                    }
-                ],
-                "col_offset": 0,
-                "end_col_offset": 13,
-                "end_lineno": 9,
-                "func": {
-                    "_type": "Name",
-                    "col_offset": 0,
-                    "ctx": {
-                        "_type": "Load"
-                    },
-                    "end_col_offset": 5,
-                    "end_lineno": 9,
-                    "id": "print",
-                    "lineno": 9
-                },
-                "keywords": [],
-                "lineno": 9
-            }
         }
     ],
     "type_ignores": []

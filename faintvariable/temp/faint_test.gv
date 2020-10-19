@@ -9,35 +9,35 @@ OUT = None"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	1 [label="block 1:
 
-IN = {'c', 'b', 'a'}
-a = 1: gen = {'a'}, kill = set(), out = {'c', 'b'}, in = {'c', 'b', 'a'} 
-c = 0: gen = {'c'}, kill = set(), out = {'c', 'b'}, in = {'c', 'b'} 
-b = 0: gen = {'b'}, kill = set(), out = {'c', 'b'}, in = {'c', 'b'} 
-branch[a > 1]: gen = set(), kill = {'a'}, out = {'c', 'b', 'a'}, in = {'c', 'b'} 
-GEN: set(),  KILL: {'c', 'b', 'a'} 
-OUT = {'c', 'b', 'a'}"]
+IN = {'b', 'c', 'a'}
+0: a = 1: gen = {'a'}, kill = set(), out = {'b', 'c'}, in = {'b', 'c', 'a'} 
+1: c = 0: gen = {'c'}, kill = set(), out = {'b', 'c'}, in = {'b', 'c'} 
+2: b = 0: gen = {'b'}, kill = set(), out = {'b', 'c'}, in = {'b', 'c'} 
+-1: branch[a > 1]: gen = set(), kill = {'a'}, out = {'b', 'c', 'a'}, in = {'b', 'c'} 
+GEN: set(),  KILL: {'b', 'c', 'a'} 
+OUT = {'b', 'c', 'a'}"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	2 [label="block 2:
 
-IN = {'c', 'b', 'a'}
-b = 2: gen = {'b'}, kill = set(), out = {'c', 'b', 'a'}, in = {'c', 'b', 'a'} 
-c = 1: gen = {'c'}, kill = set(), out = {'b', 'a'}, in = {'c', 'b', 'a'} 
-GEN: set(),  KILL: {'c', 'b'} 
+IN = {'b', 'c', 'a'}
+3: b = 2: gen = {'b'}, kill = set(), out = {'b', 'c', 'a'}, in = {'b', 'c', 'a'} 
+4: c = 1: gen = {'c'}, kill = set(), out = {'b', 'a'}, in = {'b', 'c', 'a'} 
+GEN: set(),  KILL: {'b', 'c'} 
 OUT = {'b', 'a'}"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	3 [label="block 3:
 
-IN = {'c', 'b', 'a'}
-c = 4: gen = {'c'}, kill = set(), out = {'b', 'a'}, in = {'c', 'b', 'a'} 
+IN = {'b', 'c', 'a'}
+5: c = 4: gen = {'c'}, kill = set(), out = {'b', 'a'}, in = {'b', 'c', 'a'} 
 GEN: set(),  KILL: {'c'} 
 OUT = {'b', 'a'}"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	4 [label="block 4:
 
 IN = {'b', 'a'}
-print(c): gen = set(), kill = {'c'}, out = {'c', 'b', 'a'}, in = {'b', 'a'} 
+-1: print(c): gen = set(), kill = {'c'}, out = {'b', 'c', 'a'}, in = {'b', 'a'} 
 GEN: {'c'},  KILL: set() 
-OUT = {'c', 'b', 'a'}"]
+OUT = {'b', 'c', 'a'}"]
 	node [color="#f2e996" shape=ellipse style=filled]
 	node [color="#97fcb2" shape=diamond style=filled]
 	5 [label="

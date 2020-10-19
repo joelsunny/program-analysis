@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import asttostr
+from pprint import pprint 
 from collections import deque
 import graphviz
 from graphviz import Digraph
@@ -53,11 +54,11 @@ class BasicBlock:
         add a new instruction to the basic block
         """
         self.source.append(instr)
-        if instr["_type"] == "Assign" or instr["_type"] == "AugAssign":
-            INSTR_COUNT += 1
-            self.valuenumbers.append[INSTR_COUNT]
-        else: 
-            self.valuenumbers.append(-1)
+        # if instr["_type"] == "Assign" or instr["_type"] == "AugAssign":
+        #     INSTR_COUNT += 1
+        #     self.valuenumbers.append[INSTR_COUNT]
+        # else: 
+        #     self.valuenumbers.append(-1)
     def add_neighbour(self, block):
         """
         add a neighbour to the block
@@ -167,7 +168,7 @@ class BasicBlock:
             block_contents=f"block {self.id}:\n"
         # block_source = "\n".join(self.source)
         block_contents += f"\nIN = {self.IN}\n"
-        block_source = "\n".join([f"{i}: " + self.source[i] + ": " + f"gen = {self.faintgen[i]}, kill = {self.faintkill[i]}, out = {self.faintout[i]}, in = {self.faintin[i]} " for i in range(len(self.ast_nodes))]) 
+        block_source = "\n".join([f"{self.ast_nodes[i]['instr_id']}: " + self.source[i] + ": " + f"gen = {self.faintgen[i]}, kill = {self.faintkill[i]}, out = {self.faintout[i]}, in = {self.faintin[i]} " for i in range(len(self.ast_nodes))]) 
         block_contents += f"{block_source}"
         GEN, KILL = basic_block_gen_kill(self)
 
@@ -184,6 +185,7 @@ class CFG:
         self.add_edge(self.root, t_block)
         self.root = t_block
         self.exit_block = None
+        self.augmented_ast = None
 
     def add_node(self, block):
         """
@@ -253,10 +255,37 @@ class CFG:
     
         return dot
 
+    def augment_ast(self, ast):
+        idx = 0
+        def augment_node(node, idx):
+            if not isinstance(node, dict):
+                return idx
+            if node["_type"] == "Assign" or node["_type"] == "AugAssign":
+                node["instr_id"] = idx
+                idx+=1
+                return idx
+            else: 
+                node["instr_id"] = -1
+
+            for key in node:
+                if isinstance(node[key], dict):
+                    idx = augment_node(node[key], idx)
+                elif isinstance(node[key], list):
+                    for n in node[key]:
+                        idx = augment_node(n, idx)
+            return idx
+
+        for stmt in ast["body"]:
+            idx = augment_node(stmt, idx)
+        return ast
+
     def from_ast(self, ast):
         """
         function to generate CFG from the AST
         """
+        ast = self.augment_ast(ast)
+        self.augmented_ast = ast 
+        # pprint(ast)
         exit_block = self.construct_from_ast(ast["body"])
         if len(exit_block.source) == 0:
             exit_block.add_instruction("EXIT")
@@ -501,7 +530,7 @@ def render_graph(cfg, outfile):
     """
     dot = cfg.generate_dot()
     try:
-        dot.render(f'temp/{outfile}.gv', view=True)
+        dot.render(f'temp/{outfile}.gv', view=False, quiet=True, quiet_view=True)
     except graphviz.ExecutableNotFound:
         print("ERROR: graphviz.ExecutableNotFound. Install graphviz tool.")
         exit(1)

@@ -281,7 +281,6 @@ def ast_to_str2(ast, block, faint, idx, op=False, sub=False, join=False, prefix=
         return pfix+stmt
 
 
-
 def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
     """
     two types of nodes:
@@ -290,9 +289,16 @@ def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
     """
     if ast == None:
         return None
-    expr_type = ast["_type"]
+    try:
+        expr_type = ast["_type"]
+    except TypeError:
+        print(f"ERROR: ast = {ast}")
+
     stmt = ""
-    
+    if "is_faint" in ast:
+        if ast["is_faint"] == True:
+            return ""
+
     if op:
         stmt = op_dict[expr_type]
     elif expr_type == "Constant":
@@ -475,18 +481,21 @@ def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
         # If(expr test, stmt* body, stmt* orelse)
         test = ast_to_str(ast["test"])
         body = [ast_to_str(i, prefix=prefix+1) for i in ast["body"]]
-        body = f"\n".join(body)
+        body = f"\n".join([i for i in body if i != ""])
         body = body
+        if len(body) == 0:
+            body = "\t"*(prefix+1) + "pass"
         orelse = ""
         if len(ast["orelse"]) > 0:
             # orelse = [ast_to_str(i, OrElse=True, prefix=prefix) for i in ast["orelse"]]
             if ast["orelse"][0]["_type"] == "If":
                 orelse = [ast_to_str(i, OrElse=True, prefix=prefix) for i in ast["orelse"]]
-                orelse = "\n".join(orelse)
+                orelse = "\n".join([i for i in orelse if i != ""])
             else:
-                orelse = "else:"
-                for i, node in enumerate(ast["orelse"]):
-                    orelse += "\n" + ast_to_str(node, prefix=prefix+1)
+                if len(orelse) > 0:
+                    orelse = "else:"
+                    for i, node in enumerate(ast["orelse"]):
+                        orelse += "\n" + ast_to_str(node, prefix=prefix+1)
 
         if OrElse == True:
             stmt = f"elif {test}:\n{body}\n{orelse}"
@@ -497,8 +506,23 @@ def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
         test = ast_to_str(ast["test"])
         body = ""
         for i, node in enumerate(ast["body"]):
-            body += "\n" + ast_to_str(node, prefix=prefix+1)
+            t = ast_to_str(node, prefix=prefix+1)
+            if t != "":
+                body += "\n" + ast_to_str(node, prefix=prefix+1)
         stmt = f"while {test}:{body}"
+    elif expr_type == "Import":
+        # Import(alias* names)
+        names = [ast_to_str(i) for i in ast["names"]]
+        names = ",".join(names)
+        stmt = "import "+ names
+    elif expr_type == "alias":
+        # alias = (identifier name, identifier? asname)
+        name = ast["name"]
+        stmt = f"{name}"
+        if ast["asname"] != None:
+            asname = ast["asname"]
+            stmt += f" as {asname}"
+
     else:
         return f"unimplemented: {expr_type}"
     
