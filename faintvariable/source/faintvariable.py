@@ -31,7 +31,6 @@ def get_successor_info(cfg):
         
         for n in block.neighbours:
             if n.is_dummy:
-                # print(f"dummy block: {n.id}")
                 res = res.union(succ(n))
             elif not n.is_special:
                 res.add(n.id)
@@ -42,14 +41,16 @@ def get_successor_info(cfg):
         if not block.is_dummy and not block.is_special:
             # print(f"processing block : {block.id}")
             succ_map[block.id] = succ(block)
-    
-    # pprint(succ_map, indent=4)
+
     return succ_map
 
 def get_targets(targets):
     t = set()
     for node in targets:
-        t.add(node["id"])
+        if node["_type"] == "Tuple":
+            t = t.union(get_targets(node["elts"]))
+        else:
+            t.add(node["id"])
     return t
 
 def get_uses(node, key=None):
@@ -92,7 +93,7 @@ def get_call_arguments(node, key=None):
                 uses = uses.union(get_call_arguments(n))
     return uses
 
-def intrablock_fv2(block, block_out, block_in):
+def intrablock_fv(block, block_out, block_in):
     for i in range(len(block.ast_nodes)):
         idx = len(block.ast_nodes)-1 -i
         stmt = block.ast_nodes[idx]
@@ -101,27 +102,28 @@ def intrablock_fv2(block, block_out, block_in):
         
         if stmt_type == "Assign":
             ts = get_targets(stmt["targets"])
-            block.faintgen[idx] = get_targets(stmt["targets"])
-            # block.faintgen[idx] = get_targets(stmt["targets"]).difference(get_uses(stmt))
-            
+            block.faintgen[idx] = get_targets(stmt["targets"])            
             block.faintkill[idx] = get_uses(stmt) if list(get_targets(stmt["targets"]))[0] not in block.faintout[idx] else set()
             args = get_call_arguments(stmt)
             if len(args) > 0:
                 block.faintkill[idx] = block.faintkill[idx].union(args)
                 block.faintout[idx] = block.faintout[idx].difference(ts)
-            if 'x' in ts:
-                print(f"source = {block.source[idx]}, out = {block.faintout[idx]}, kill = {block.faintkill[idx]}, uses = {get_uses(stmt)}")
-                print(f"args = {args}")
+            # if 'x' in ts:
+            #     print(f"source = {block.source[idx]}, out = {block.faintout[idx]}, kill = {block.faintkill[idx]}, uses = {get_uses(stmt)}")
+            #     print(f"args = {args}")
         elif stmt_type == "AugAssign":
-            pass
+            ts = set([stmt["target"]["id"]])
+            block.faintgen[idx] = ts          
+            block.faintkill[idx] = get_uses(stmt) if list(ts)[0] not in block.faintout[idx] else set()
+            args = get_call_arguments(stmt)
+            if len(args) > 0:
+                block.faintkill[idx] = block.faintkill[idx].union(args)
+                block.faintout[idx] = block.faintout[idx].difference(ts)
         else:
             block.faintgen[idx] = set()
             block.faintkill[idx] = get_uses(stmt)
         
-        
-        # print(f"block {block.id}: {block.source[idx]} : in = ({block.faintgen[idx]} - {block.faintkill[idx]}) U ({block.faintout[idx]} - {block.faintkill[idx]})")
         block.faintin[idx] = (block.faintgen[idx].difference(block.faintkill[idx])).union(block.faintout[idx].difference(block.faintkill[idx]))
-        # print(f"block {block.id}: {block.source[idx]} : in = ({block.faintgen[idx]} - {block.faintkill[idx]}) U ({block.faintout[idx]} - {block.faintkill[idx]}) = { block.faintin[idx]}")
 
 def get_all_targets(cfg):
     res = set()
@@ -132,7 +134,7 @@ def get_all_targets(cfg):
                 res = res.union(get_targets(stmt["targets"]))
     return res
 
-def faintvariable(cfg):
+def faintvariable_analysis(cfg):
     blocks = get_block_ordering(cfg)
     # print(blocks)
     successors = get_successor_info(cfg)
@@ -154,27 +156,15 @@ def faintvariable(cfg):
     # k = 0
     while not flag:
         for i, block in enumerate(blocks):
-            # intra block calculation
-            # if block == 2:
-            #     print(f"calling intrablock({block}, {OUT[i]}, {1})")
-            # intrablock_fv(cfg.blocks[block], OUT[i], IN[i]) # TODO
-            # IN[i] = cfg.blocks[block].faintin[0]
-
             OUT[i] = U
             for s in successors[block]:
                 # calculate OUT of block
                 OUT[i] = OUT[i].intersection(IN[block_order[s]])
-            # print(f"out[{block}] = { ' int '.join([ str(IN[block_order[s]]) for s in successors[block] ]) } = {OUT[i]}")
-            # print(f"in{[block]} = {IN[i]}")
-            intrablock_fv2(cfg.blocks[block], OUT[i], IN[i])
+            intrablock_fv(cfg.blocks[block], OUT[i], IN[i])
             IN[i] = cfg.blocks[block].faintin[0]
         if prev_in == IN:
             flag = True
-            # print("amzing")
-            # exit(0)
-        # print(f"flag = {flag}")
         prev_in = [i for i in IN]
-        # k+=1
 
     return IN, OUT, blocks
 
@@ -245,7 +235,7 @@ def remove_faint(cfg, faint, outfile):
         t = asttostr.ast_to_str(node)
         if t != "":
             source += "\n" + asttostr.ast_to_str(node)
-    print(source)
+    # print(source)
     with open(f'temp/{outfile}_optimized.py', 'w') as f: 
         f.write(source)
 
@@ -260,13 +250,10 @@ if __name__ == '__main__':
     cfg = CFG()
     # # construct control flow graph from ast
     cfg.from_ast(ast)
-    augment_blocks(cfg)
-    # # render cfg as image
     outfile = os.path.basename(ast_file)
     outfile = outfile.split(".")[:-1]
     outfile = "".join(outfile)
-    # render_graph(cfg, outfile=outfile)
-    faintvariable(cfg)
+    faintvariable_analysis(cfg)
     faint, faint_source = get_faintvariables(cfg)
-    print(faint_source)
+    print(f"eliminated statements = {faint_source}")
     remove_faint(cfg, faint, outfile)

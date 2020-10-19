@@ -494,8 +494,14 @@ def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
             else:
                 if len(ast["orelse"]) > 0:
                     orelse = "\t"*prefix + "else:"
+                    body_count = 0
                     for i, node in enumerate(ast["orelse"]):
-                        orelse += "\n" + ast_to_str(node, prefix=prefix+1)
+                        t = ast_to_str(node, prefix=prefix+1)
+                        if t != "":
+                            body_count+=1
+                        orelse += "\n" + t
+                    if body_count == 0:
+                        orelse = ""
 
         if OrElse == True:
             stmt = f"elif {test}:\n{body}\n{orelse}"
@@ -543,6 +549,8 @@ def ast_to_str(ast, op=False, sub=False, join=False, prefix=0, OrElse=False):
         if ast["value"] != None:
             value = ast_to_str(ast["value"])
         stmt += f" {value}"
+    elif expr_type == "Pass":
+        stmt = "pass"
     else:
         return f"unimplemented: {expr_type}"
     
